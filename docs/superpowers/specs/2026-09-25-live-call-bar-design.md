@@ -194,7 +194,7 @@ marks a user line an external interface sent through the guarded send route
 
 ### The call id and the call row
 
-Added 2026-10-06 (the harness half of SupaMaus/mausbot-mobile
+Added 2026-10-06 (the harness half of MEGZbot/megzbot-mobile
 `docs/superpowers/specs/2026-10-06-grok-style-live-calls-design.md`).
 
 - **Call id.** Every user line a call delivers carries `callId`, the call's
@@ -422,7 +422,7 @@ hold and the line they show:
   stay per platform. Presentation includes where the call lives on screen:
   the desktop keeps the call bar above the composer, and the phones may show
   an app-wide dock that opens into a full-screen call with a live transcript
-  (mausbot-mobile spec 2026-10-06-grok-style-live-calls-design). That
+  (megzbot-mobile spec 2026-10-06-grok-style-live-calls-design). That
   transcript is the phone's own data-channel captions, kept in memory for
   the current call only: the voice's words are still never stored or sent
   anywhere.
@@ -440,7 +440,7 @@ call counts as dropped, which is what offers **Try again**:
 | `expired` | "Call ended: it reached OpenAI's time limit." | no |
 | `content` | "OpenAI ended the call under its content rules." | no |
 | `deleted` | "Call ended: the chat was deleted." | no |
-| `shutdown` | "Call ended: OpenMausBot restarted." | no |
+| `shutdown` | "Call ended: MEGZbot restarted." | no |
 | `signed-out` | "Call ended: you were signed out." | no |
 | `remote-hangup` | "Call dropped." | yes |
 | `connection-lost` | "Call dropped." | yes |
@@ -505,7 +505,7 @@ spoken line is answered aloud). The docs page says so.
 | Phone cannot reach the computer | Call button explains; no call starts |
 | OpenAI refuses (key, quota, voice) | Clear message in the bar (existing `liveErrorMessage`) |
 | Media or sideband drops | Bar shows the harness's words when it sent them, else "Call dropped." + **Try again**; bot work continues into the chat |
-| Harness restarts mid-call | Call ends; clients show "Call ended: OpenMausBot restarted." when the harness says `shutdown`, else "Call ended."; no Try again |
+| Harness restarts mid-call | Call ends; clients show "Call ended: MEGZbot restarted." when the harness says `shutdown`, else "Call ended."; no Try again |
 | Phone unpaired, or sign-in revoked, mid-call | Call ends at once, reason `signed-out` with the harness's words; no Try again. A phone the computer no longer takes hangs up by itself at once (`session.close` on its own channel) and shows "Call ended: you were signed out." (the iPhone on its unpaired screen) |
 | Bot turn fails / no text | Voice says the result is in the chat |
 | Bot waits for an app to connect or a credential | Voice points to the chat once; never asks for a credential aloud |

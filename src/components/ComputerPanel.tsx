@@ -1034,7 +1034,7 @@ export function ComputerPanel({
   };
 
   const openVmSettings = () => {
-    window.sessionStorage.setItem("openmausbot.settings.section", "computer");
+    window.sessionStorage.setItem("megzbot.settings.section", "computer");
     dispatch({ type: "toggleAppSettings", open: true });
   };
 

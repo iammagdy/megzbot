@@ -147,7 +147,7 @@ export async function startRig(relayUrl: (signingPublicKey: Buffer) => Promise<s
   const control = async (method: string, path: string, body?: unknown): Promise<State> => {
     const res = await fetch(`http://127.0.0.1:${controlPort}${path}`, {
       method,
-      headers: { "x-openmausbot-control-token": controlToken, ...(body ? { "content-type": "application/json" } : {}) },
+      headers: { "x-megzbot-control-token": controlToken, ...(body ? { "content-type": "application/json" } : {}) },
       body: body ? JSON.stringify(body) : undefined,
     });
     if (!res.ok) throw new Error(`${method} ${path}: ${res.status} ${await res.text()}`);

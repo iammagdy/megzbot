@@ -273,7 +273,7 @@ describe("CI outputs", () => {
       "server/question-routing.e2e.test.ts",
       "server/team-protocol.e2e.test.ts",
       "server/team-small-fixes.e2e.test.ts",
-      "server/team-mausbot-followup.e2e.test.ts",
+      "server/team-megzbot-followup.e2e.test.ts",
       "server/team-no-ai.e2e.test.ts",
       "server/team-refused-handoff.e2e.test.ts",
       "server/two-places.e2e.test.ts",
@@ -283,7 +283,7 @@ describe("CI outputs", () => {
       "server/place-inbox.e2e.test.ts",
       "server/bot-api-team.e2e.test.ts",
       "server/cloud-team-first-look.e2e.test.ts",
-      "server/cloud-team-mausbot-own-chat.e2e.test.ts",
+      "server/cloud-team-megzbot-own-chat.e2e.test.ts",
       "server/connector-stayed.e2e.test.ts",
       "server/email/host.test.ts",
       "server/host/outside-lineage.test.ts",
@@ -650,7 +650,7 @@ describe("CI scope CLI", () => {
 });
 
 const pkg = (version: string, extra: Record<string, unknown> = {}) =>
-  `${JSON.stringify({ name: "openmausbot", private: true, version, scripts: { test: "vitest run" }, ...extra }, null, 2)}\n`;
+  `${JSON.stringify({ name: "megzbot", private: true, version, scripts: { test: "vitest run" }, ...extra }, null, 2)}\n`;
 
 describe("version-only package.json", () => {
   it("is only a changed top-level version", () => {
@@ -664,7 +664,7 @@ describe("version-only package.json", () => {
     ["a dependency added", pkg("0.1.100"), pkg("0.1.101", { dependencies: { zod: "4" } })],
     ["a script changed", pkg("0.1.100"), pkg("0.1.101").replace("vitest run", "vitest run --bail")],
     ["a nested version changed", pkg("0.1.100", { engines: { version: "1" } }), pkg("0.1.101", { engines: { version: "2" } })],
-    ["other keys reordered", pkg("0.1.100"), JSON.stringify({ private: true, name: "openmausbot", version: "0.1.101", scripts: { test: "vitest run" } })],
+    ["other keys reordered", pkg("0.1.100"), JSON.stringify({ private: true, name: "megzbot", version: "0.1.101", scripts: { test: "vitest run" } })],
     ["no version before", JSON.stringify({ name: "x" }), JSON.stringify({ name: "x", version: "1.0.0" })],
     ["not JSON", "{", pkg("0.1.101")],
     ["not an object", "[]", "[]"],

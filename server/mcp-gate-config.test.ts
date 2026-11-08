@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { customServerGate, gateQueryTools, gateServer, hasOwnResultBudget, mcpStdioServer, resultBudget, serverResultBudget } from "./mcp-gate-config.ts";
 import { DEFAULT_RESULT_BUDGET } from "./mcp-trim.ts";
@@ -8,6 +8,8 @@ const input = { name: "notes", server, threadId: "disposable-thread", budget: 0 
 const remote = { type: "http" as const, url: "https://mcp.example.test/mcp", headers: { Authorization: "Bearer disposable-remote-token" } };
 
 describe("MCP scope configuration", () => {
+  afterEach(() => { vi.unstubAllEnvs(); });
+
   it("preserves the legacy budget-zero escape hatch only when selection is absent", () => {
     expect(gateServer(input)).toBeNull();
     const gated = gateServer({ ...input, toolScope: { allow: [] } });
@@ -54,6 +56,7 @@ describe("tool directory configuration", () => {
   });
 
   it("keeps a shared environment's settings in one private record", () => {
+    for (const name of ["HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy", "NO_PROXY", "no_proxy", "NODE_EXTRA_CA_CERTS", "SSL_CERT_FILE", "SSL_CERT_DIR"]) vi.stubEnv(name, undefined);
     const record = `OMB_REMOTE_MCP_CONFIG_${"0".repeat(64)}`;
     const proxy = mcpStdioServer(remote, { nodeEnv: { ELECTRON_RUN_AS_NODE: "1" }, directory: { name: "whop" }, configEnvName: record })!;
     expect(proxy.args!.slice(1)).toEqual(["--config-env", record]);

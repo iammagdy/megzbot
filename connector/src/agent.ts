@@ -190,7 +190,7 @@ export class Agent {
     try {
       this.connection!.socket.send(text);
     } catch (error) {
-      this.options.log(`could not send to MausBot: ${errorText(error)}`);
+      this.options.log(`could not send to MEGZbot: ${errorText(error)}`);
     }
   }
 
@@ -202,7 +202,7 @@ export class Agent {
       socket = (this.options.socket ?? nodeSocket)(connectUrl(identity.admin), { headers: { [BOX_HEADER]: identity.boxId }, protocols: [CHANNEL_PROTOCOL] });
       socket.binaryType = "arraybuffer";
     } catch (error) {
-      this.options.log(`could not open the connection to MausBot: ${errorText(error)}`);
+      this.options.log(`could not open the connection to MEGZbot: ${errorText(error)}`);
       this.scheduleRetry(backoffMs(this.attempt++, this.random()));
       return;
     }
@@ -211,7 +211,7 @@ export class Agent {
     socket.onopen = () => {
       if (this.connection !== connection) return;
       this.deadline = this.setTimer(() => {
-        if (this.connection === connection && connection.phase !== "open") this.drop(CLOSE_SILENT, "MausBot did not finish the handshake");
+        if (this.connection === connection && connection.phase !== "open") this.drop(CLOSE_SILENT, "MEGZbot did not finish the handshake");
       }, this.options.handshakeMs ?? HANDSHAKE_MS);
     };
     socket.onmessage = (event) => {
@@ -230,7 +230,7 @@ export class Agent {
   private drop(code: number, why: string): void {
     const connection = this.connection;
     if (!connection) return;
-    this.options.log(`dropping the connection to MausBot: ${why}`);
+    this.options.log(`dropping the connection to MEGZbot: ${why}`);
     try { connection.socket.close(code, why.slice(0, 120)); } catch { /* already closed */ }
     this.closed(code, why);
   }
@@ -251,15 +251,15 @@ export class Agent {
     if (lasted >= STABLE_MS) this.attempt = 0;
     if (code === CLOSE_UNAUTHORIZED || code === CLOSE_KEY_COPIED) {
       const why = code === CLOSE_KEY_COPIED
-        ? "MausBot saw another server use this server's key, so it stopped trusting the key"
-        : "MausBot no longer knows this server";
+        ? "MEGZbot saw another server use this server's key, so it stopped trusting the key"
+        : "MEGZbot no longer knows this server";
       this.options.status?.({ connected: false, unauthorized: true, lastError: why });
       this.options.log(`${why}; run the install command again with a new code to connect it`);
       this.scheduleRetry(UNAUTHORIZED_RETRY_MS);
       return;
     }
-    this.options.status?.({ connected: false, lastError: wasOpen ? `the connection closed (${code})` : "MausBot could not be reached" });
-    if (wasOpen) this.options.log(`the connection to MausBot closed (${code}${reason ? `: ${reason}` : ""})`);
+    this.options.status?.({ connected: false, lastError: wasOpen ? `the connection closed (${code})` : "MEGZbot could not be reached" });
+    if (wasOpen) this.options.log(`the connection to MEGZbot closed (${code}${reason ? `: ${reason}` : ""})`);
     if (this.restartIn !== null) {
       const wait = this.restartIn;
       this.restartIn = null;
@@ -294,7 +294,7 @@ export class Agent {
       message = parsed as Record<string, unknown>;
     } catch {
       if (connection.phase !== "open") return this.drop(CLOSE_PROTOCOL, "a handshake message that is not JSON");
-      this.options.log("ignored a message from MausBot that is not JSON");
+      this.options.log("ignored a message from MEGZbot that is not JSON");
       return;
     }
     if (connection.phase === "challenge") return this.challenged(connection, message);
@@ -303,7 +303,7 @@ export class Agent {
   }
 
   private challenged(connection: Connection, message: Record<string, unknown>): void {
-    if (message.t !== "challenge" || message.v !== 1 || !checkNonce(message.nonce)) return this.drop(CLOSE_PROTOCOL, "MausBot did not start the handshake");
+    if (message.t !== "challenge" || message.v !== 1 || !checkNonce(message.nonce)) return this.drop(CLOSE_PROTOCOL, "MEGZbot did not start the handshake");
     const identity = this.options.identity();
     let count: number;
     try {
@@ -324,8 +324,8 @@ export class Agent {
     const identity = this.options.identity();
     const opened = message.t === "hello" ? unseal(message.signed, identity.adminKeys) : { ok: false as const, why: "not a hello" };
     if (!opened.ok) {
-      this.options.status?.({ lastError: `the MausBot at ${identity.admin} did not prove it holds MausBot's key (${opened.why})` });
-      return this.drop(CLOSE_PROTOCOL, `MausBot's hello did not verify: ${opened.why}`);
+      this.options.status?.({ lastError: `the MEGZbot at ${identity.admin} did not prove it holds MEGZbot's key (${opened.why})` });
+      return this.drop(CLOSE_PROTOCOL, `MEGZbot's hello did not verify: ${opened.why}`);
     }
     const hello = checkHello(opened.payload, { box: identity.boxId, adminNonce: connection.adminNonce, boxNonce: connection.boxNonce, count: connection.count });
     if (!hello.ok) return this.drop(CLOSE_PROTOCOL, hello.message);
@@ -345,7 +345,7 @@ export class Agent {
     this.openedAt = this.now();
     this.setState(hello.value.state);
     this.options.status?.({ connected: true, unauthorized: false, lastConnectedAt: this.openedAt, lastError: null });
-    this.options.log(`connected to MausBot (${hello.value.state === "pending" ? "waiting for the team's Owner to accept this server" : "accepted"})`);
+    this.options.log(`connected to MEGZbot (${hello.value.state === "pending" ? "waiting for the team's Owner to accept this server" : "accepted"})`);
     for (const { text } of this.unacked.values()) connection.socket.send(text);
     this.startBeat(connection);
     this.onConnected?.();
@@ -379,10 +379,10 @@ export class Agent {
       return;
     }
     if ("id" in message || "type" in message) {
-      this.refuse({ code: "unsigned_job", message: "a job MausBot did not sign" });
+      this.refuse({ code: "unsigned_job", message: "a job MEGZbot did not sign" });
       return;
     }
-    this.options.log("ignored a message from MausBot this connector does not know");
+    this.options.log("ignored a message from MEGZbot this connector does not know");
   }
 
   private refuse(refusal: Refusal, reply = false): void {
@@ -394,7 +394,7 @@ export class Agent {
   private signedJob(connection: Connection, envelope: string): void {
     const identity = this.options.identity();
     const opened = unseal(envelope, identity.adminKeys);
-    if (!opened.ok) return this.refuse({ code: "unsigned_job", message: `a job MausBot did not sign (${opened.why})` });
+    if (!opened.ok) return this.refuse({ code: "unsigned_job", message: `a job MEGZbot did not sign (${opened.why})` });
     const payload = checkJobPayload(opened.payload, identity.boxId, this.now() + connection.offset);
     const claimed = typeof opened.payload.job === "object" && opened.payload.job !== null ? opened.payload.job as { id?: unknown; type?: unknown } : {};
     const id = typeof claimed.id === "string" ? claimed.id.slice(0, 64) : undefined;
@@ -413,7 +413,7 @@ export class Agent {
       return;
     }
     if (this.boxState !== "accepted" && !READS.has(job.type)) {
-      return this.refuse({ code: "pending_box", message: "The team's Owner has not accepted this server in MausBot yet.", id: job.id, type: job.type }, true);
+      return this.refuse({ code: "pending_box", message: "The team's Owner has not accepted this server in MEGZbot yet.", id: job.id, type: job.type }, true);
     }
     this.replies.set(job.id, "running");
     this.options.log(`job ${job.id}: ${job.type}`);
@@ -430,7 +430,7 @@ export class Agent {
   private signedConfig(envelope: string): void {
     const identity = this.options.identity();
     const opened = unseal(envelope, identity.adminKeys);
-    if (!opened.ok) return void this.options.log(`ignored a config MausBot did not sign (${opened.why})`);
+    if (!opened.ok) return void this.options.log(`ignored a config MEGZbot did not sign (${opened.why})`);
     const config = checkConfig(opened.payload, identity.boxId);
     if (!config.ok) return void this.options.log(`ignored a config: ${config.message}`);
     this.setState(config.value.state);
@@ -439,7 +439,7 @@ export class Agent {
     try {
       this.options.config?.save({ envelope, version: config.value.version, savedAt: this.now() });
     } catch (error) {
-      this.options.log(`could not keep MausBot's config on this server: ${errorText(error)}`);
+      this.options.log(`could not keep MEGZbot's config on this server: ${errorText(error)}`);
     }
     this.options.onConfig?.(config.value);
   }
@@ -455,7 +455,7 @@ export class Agent {
     const tick = () => {
       if (this.connection !== connection) return;
       // The wall clock: after a suspended VM resumes, it has moved on while timers stood still.
-      if (this.now() - connection.heardAt > deadMs) return this.drop(CLOSE_SILENT, `nothing from MausBot for ${Math.round(deadMs / 1000)} s`);
+      if (this.now() - connection.heardAt > deadMs) return this.drop(CLOSE_SILENT, `nothing from MEGZbot for ${Math.round(deadMs / 1000)} s`);
       connection.pings = (connection.pings + 1) >>> 0;
       connection.mux?.ping(connection.pings);
       this.tick = this.setTimer(tick, pingMs);

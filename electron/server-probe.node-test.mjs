@@ -32,7 +32,7 @@ test("failures are sorted into what the person can fix", async () => {
   const cert = new Error("net::ERR_CERT_AUTHORITY_INVALID");
   assert.equal((await probeServer({ address: "maus.example.com", fetch: fakeFetch({ "https://maus.example.com": cert }).fetch })).problem, "certificate");
   const other = () => new Response("<html>", { status: 200 });
-  assert.equal((await probeServer({ address: "maus.example.com", fetch: fakeFetch({ "https://maus.example.com": other }).fetch })).problem, "notMausBot");
+  assert.equal((await probeServer({ address: "maus.example.com", fetch: fakeFetch({ "https://maus.example.com": other }).fetch })).problem, "notMEGZbot");
   assert.deepEqual(await probeServer({ address: "http://203.0.113.9", fetch: fakeFetch({}).fetch }), { outcome: "problem", problem: "publicHttp", host: "203.0.113.9" });
   assert.deepEqual(await probeServer({ address: "ABCD-EFGH-JKLM", fetch: fakeFetch({}).fetch }), { outcome: "problem", problem: "codeOnly", code: "ABCD-EFGH-JKLM" });
 });

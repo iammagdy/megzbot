@@ -52,13 +52,13 @@ beforeEach(() => {
   fetchMock.mockImplementation(async (input, init) => {
     const url = String(input);
     const local = `http://127.0.0.1:${options.port}`;
-    if (url === `${local}/api/health`) return Response.json({ app: "openmausbot", pid: 12345 });
+    if (url === `${local}/api/health`) return Response.json({ app: "megzbot", pid: 12345 });
     if (url === `${local}/api/auth/pairing`) {
       if (init?.method === "POST") return Response.json({ code, expiresAt: Date.now() + 300_000, url: `${advertisedOrigin}/pair#code=${code}` });
       return Response.json({ pairings: [], publicUrl });
     }
-    if (url === `${local}/.well-known/openmausbot/environment`) return Response.json({ environmentId: workspaceId });
-    if ([advertisedOrigin, explicitOrigin].some((origin) => url === `${origin}/.well-known/openmausbot/environment`)) {
+    if (url === `${local}/.well-known/megzbot/environment`) return Response.json({ environmentId: workspaceId });
+    if ([advertisedOrigin, explicitOrigin].some((origin) => url === `${origin}/.well-known/megzbot/environment`)) {
       return Response.json({ environmentId: remoteWorkspaceId });
     }
     // No real network fallback is allowed, including stale saved addresses.
@@ -81,7 +81,7 @@ afterEach(async () => {
 
 const printed = () => vi.mocked(console.log).mock.calls.map(([line]) => String(line)).join("\n");
 
-describe("openmausbot pair", () => {
+describe("megzbot pair", () => {
   it("never asks anything: one code, the running server's own link, a QR, and the phone command", async () => {
     expect(await runPair(options)).toBe(0);
     expect(mocks.ui.choose).not.toHaveBeenCalled();
@@ -92,7 +92,7 @@ describe("openmausbot pair", () => {
     expect(printed()).toMatch(new RegExp(`Pairing code {3}${code} {3}works once, until .+ · everything`));
     expect(printed()).toContain(`Link           ${advertisedOrigin}/pair#code=${code}`);
     expect(printed()).toMatch(/[▀▄█]/);
-    expect(printed()).toContain("For a phone (chat and approvals only)   openmausbot pair --phone");
+    expect(printed()).toContain("For a phone (chat and approvals only)   megzbot pair --phone");
     expect(printed()).not.toContain("doesn't reach");
   });
 
@@ -121,30 +121,30 @@ describe("openmausbot pair", () => {
     publicUrl = null;
     fetchMock.mockImplementation(async (input, init) => {
       const url = String(input);
-      if (url.endsWith("/api/health")) return Response.json({ app: "openmausbot", pid: 12345 });
+      if (url.endsWith("/api/health")) return Response.json({ app: "megzbot", pid: 12345 });
       if (url.endsWith("/api/auth/pairing")) return init?.method === "POST" ? Response.json({ code, expiresAt: Date.now() + 600_000, url: null }) : Response.json({ pairings: [], publicUrl: null });
       throw new Error(`Unexpected fixture request: ${url}`);
     });
     expect(await runPair(options)).toBe(0);
     expect(printed()).toContain(`http://127.0.0.1:${options.port}/pair#code=${code}`);
-    expect(printed()).toContain("pick a way in first: openmausbot serve --help");
+    expect(printed()).toContain("pick a way in first: megzbot serve --help");
     expect(printed()).not.toMatch(/[▀▄█]/);
   });
 
   it("says how to start a server when none runs", async () => {
     fetchMock.mockImplementation(async () => { throw new Error("offline"); });
     expect(await runPair(options)).toBe(1);
-    expect(console.error).toHaveBeenCalledWith(expect.stringContaining("No MausBot server is running here. Start it: openmausbot serve"));
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining("No MEGZbot server is running here. Start it: megzbot serve"));
   });
 });
 
-describe("the phone-app link `openmausbot pair --phone android` scans", () => {
+describe("the phone-app link `megzbot pair --phone android` scans", () => {
   const credential = `omb_pair_${"b".repeat(43)}`;
   const serverName = "Miguel's computer";
   const pairingResponse = (fields: Record<string, unknown>) => {
     fetchMock.mockImplementation(async (input, init) => {
       const url = String(input);
-      if (url === `http://127.0.0.1:${options.port}/api/health`) return Response.json({ app: "openmausbot", pid: 12345 });
+      if (url === `http://127.0.0.1:${options.port}/api/health`) return Response.json({ app: "megzbot", pid: 12345 });
       if (url === `http://127.0.0.1:${options.port}/api/auth/pairing`) {
         return init?.method === "POST" ? Response.json({ code, expiresAt: Date.now() + 300_000, credential, serverName, ...fields }) : Response.json({ pairings: [], publicUrl: null });
       }
@@ -155,9 +155,9 @@ describe("the phone-app link `openmausbot pair --phone android` scans", () => {
   it("builds the invite for --public-url from the server's credential and name, and never prints it as text", async () => {
     pairingResponse({ url: null, inviteUrl: null });
     expect(await runPair({ ...options, phone: "android", publicUrl: explicitOrigin })).toBe(0);
-    expect(printed()).not.toContain("openmausbot://");
+    expect(printed()).not.toContain("megzbot://");
     expect(printed()).not.toContain(credential);
-    expect(printed()).toContain("scan this with the MausBot app");
+    expect(printed()).toContain("scan this with the MEGZbot app");
   });
 
   it("keeps a proxy path in the web link", async () => {
@@ -172,7 +172,7 @@ describe("pair --ttl", () => {
     const day = Date.now() + 86_400_000;
     fetchMock.mockImplementation(async (input, init) => {
       const url = String(input);
-      if (url.endsWith("/api/health")) return Response.json({ app: "openmausbot", pid: 12345 });
+      if (url.endsWith("/api/health")) return Response.json({ app: "megzbot", pid: 12345 });
       if (url.endsWith("/api/auth/pairing")) return init?.method === "POST" ? Response.json({ code, expiresAt: day, url: null }) : Response.json({ pairings: [], publicUrl: null });
       throw new Error(`Unexpected fixture request: ${url}`);
     });

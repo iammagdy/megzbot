@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 import { build } from "esbuild";
-import { afterAll, afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 import { CALL_TOOL, DESCRIBE_TOOL, INSTRUCTIONS_CHARS, SEARCH_TOOL, SIGNATURE_CHARS } from "./mcp-directory.ts";
 import { gateServer, mcpStdioServer } from "./mcp-gate-config.ts";
@@ -271,6 +271,7 @@ describe("remote MCP tool directory", () => {
   const json = (frame: Frame) => JSON.parse(frame.result.content[0].text);
 
   afterEach(async () => {
+    vi.unstubAllEnvs();
     if (child && child.exitCode === null && child.signalCode === null) {
       const closed = once(child, "close"); child.kill(); await closed;
     }
@@ -340,7 +341,7 @@ describe("remote MCP tool directory", () => {
     const [small, page] = (await request("tools/list")).result.tools;
     expect(small).toEqual(tools[0]);
     expect(schemaBytes(page.inputSchema)).toBeLessThanOrEqual(12_000);
-    expect(page.description).toContain("OpenMausBot shortened this tool's parameters to fit Kimi's size limit");
+    expect(page.description).toContain("MEGZbot shortened this tool's parameters to fit Kimi's size limit");
     const closed = once(child!, "close"); child!.kill(); await closed;
 
     start(mcpStdioServer(spec(fake.url))!);
@@ -480,7 +481,7 @@ describe("remote MCP tool directory", () => {
     expect(described.result.content[0].text.length).toBeGreaterThan(600);
     expect(JSON.parse(described.result.content[0].text).inputSchema).toEqual(padded.find((tool) => tool.name === "payments_list")!.inputSchema);
     const ran = (await call(CALL_TOOL, { name: "payments_list", arguments: { company_id: "biz_1" } })).result.content[0].text;
-    expect(ran).toContain("⚠️ TRUNCATED by OpenMausBot:");
+    expect(ran).toContain("⚠️ TRUNCATED by MEGZbot:");
     expect(fake.calls).toEqual([{ name: "payments_list", arguments: { company_id: "biz_1" } }]);
   });
 
@@ -497,6 +498,7 @@ describe("remote MCP tool directory", () => {
   });
 
   it("reads its settings from a private record when mounts share one environment", async () => {
+    for (const name of ["HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy", "NO_PROXY", "no_proxy", "NODE_EXTRA_CA_CERTS", "SSL_CERT_FILE", "SSL_CERT_DIR"]) vi.stubEnv(name, undefined);
     fake = await startFakeHttpMcp({ tools: catalog });
     const record = `OMB_REMOTE_MCP_CONFIG_${"a".repeat(64)}`;
     const descriptor = mcpStdioServer(spec(fake.url), { directory: { name: "whop" }, configEnvName: record })!;

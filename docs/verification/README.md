@@ -1,7 +1,7 @@
-# Verifying OpenMausBot
+# Verifying MEGZbot
 
-OpenMausBot has one development control surface: `pnpm control:omb`. It runs
-the published `openmausbot` verbs (docs/headless-cli.md), which call the MCP
+MEGZbot has one development control surface: `pnpm control:omb`. It runs
+the published `megzbot` verbs (docs/headless-cli.md), which call the MCP
 tools in `scripts/mcp-server.ts`, so verification uses the same URL
 validation, task pinning, bounded transcripts, wait states, and redaction as
 external MCP clients and scripts.
@@ -20,7 +20,7 @@ it receives Ctrl-C and can stop its child before removing the temporary data.
 It gives the child a temporary data directory and home, chooses a free
 harness/webhook port pair, installs only the repository's fake engine, prints
 the URL, PID, data directory, and persistent log path, then stays attached to
-that exact child. The parent shell and the user's OpenMausBot data are
+that exact child. The parent shell and the user's MEGZbot data are
 untouched. Only `FAKE_CLAUDE_*` variables cross from the launcher's
 environment into that child, so a recipe can script the fake engine's mode,
 replies and tool calls without writing a wrapper CLI. Live calls add one
@@ -53,7 +53,7 @@ Use only mapped, tested commands:
 - [OpenCode model variants through ACP](opencode-variants.md)
 - [Bot setup, model scope, and file continuity](bot-continuity.md)
 - [Reviewed Chief team setup and scoped deletion](team-setup.md)
-- [MausBot, everyone's helper](mausbot.md)
+- [MEGZbot, everyone's helper](megzbot.md)
 - [Profile proposal and credential-card lifecycle](proposal-cards.md)
 - [Full Access without duplicate approvals](full-access.md)
 - [Gmail draft creation, send approval and revision](gmail-drafts.md)
@@ -97,7 +97,6 @@ Use only mapped, tested commands:
 - [Organization library: the desktop channel](desktop-library.md)
 - [Fleet: many workspaces on one server](fleet.md)
 - [Workspaces screen and the fleet agent](workspaces.md)
-- [Hosted workspace sign-in and revocation](hosted-workspaces.md)
 - [Shared-workspace trust: loopback, card answerers, decision log](shared-workspace-trust.md)
 - [Shared-workspace governance: bot visibility and admin activity](shared-workspace-governance.md)
 - [Who can see, chat with and change each team bot](team-bot-access.md)
@@ -105,7 +104,6 @@ Use only mapped, tested commands:
 - [Bounded built-in tool results](tool-results.md)
 - [Memory: recall, upkeep and the tidy-up](memory-layer.md)
 - [Spend cap and sell prices](spend-cap.md)
-- [Enterprise layer loading and license expiry](enterprise-license.md)
 
 `control-omb ui` ([Chat UI, driven headlessly](chat-ui.md)) drives the real
 renderer in a headless Chrome by accessible name, so composer sends, transcript

@@ -46,7 +46,7 @@ windowManager.once("error", (error) => {
   }
 }
 
-const title = `OpenMausBot CUA input safety ${process.pid}`;
+const title = `MEGZbot CUA input safety ${process.pid}`;
 const xev = spawn(
   "xev",
   ["-name", title, "-geometry", "320x180+40+40"],
@@ -235,7 +235,7 @@ try {
   await rpc("initialize", {
     protocolVersion: "2024-11-05",
     capabilities: {},
-    clientInfo: { name: "openmausbot-x11-input-smoke", version: "1" },
+    clientInfo: { name: "megzbot-x11-input-smoke", version: "1" },
   });
   proxy.stdin.write(`${JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" })}\n`);
   const listed = await rpc("tools/list");
@@ -244,7 +244,7 @@ try {
     if (!toolNames.has(required)) throw new Error(`Cua MCP did not expose ${required}`);
   }
 
-  const session = `openmausbot-x11-smoke-${process.pid}`;
+  const session = `megzbot-x11-smoke-${process.pid}`;
   assertToolResult(
     await rpc("tools/call", {
       name: "start_session",

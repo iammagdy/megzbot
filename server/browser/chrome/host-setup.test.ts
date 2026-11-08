@@ -11,8 +11,8 @@ afterAll(async () => { for (const folder of folders) await removeTempDir(folder)
 
 describe("host setup", () => {
   it("pins the AppArmor exemption to one root-owned executable", () => {
-    const profile = appArmorProfile("/opt/OpenMausBot/resources/chrome/chrome");
-    expect(profile).toContain("profile openmausbot-chrome /opt/OpenMausBot/resources/chrome/chrome flags=(unconfined)");
+    const profile = appArmorProfile("/opt/MEGZbot/resources/chrome/chrome");
+    expect(profile).toContain("profile megzbot-chrome /opt/MEGZbot/resources/chrome/chrome flags=(unconfined)");
     expect(profile).toContain("userns,");
     for (const path of ["/opt/**/chrome", "/home/a/chrome", "relative/chrome", "/opt/a b/chrome"]) expect(() => appArmorProfile(path)).toThrow();
   });
@@ -29,7 +29,7 @@ describe("host setup", () => {
     const viewer = readFileSync(new URL("../../../src/lib/browser-stream-client.ts", import.meta.url), "utf8");
     expect(viewer).toContain(`"${SANDBOX_STEPS_URL}"`);
     expect(viewer).toContain(`"${LIBRARIES_COMMAND}"`);
-    expect(LIBRARIES_COMMAND).toBe("sudo openmausbot browser install --with-deps");
+    expect(LIBRARIES_COMMAND).toBe("sudo megzbot browser install --with-deps");
     expect(new BrowserHostError("libraries", ["libnss3.so"]).message).toContain(LIBRARIES_COMMAND);
     expect(await diagnoseLaunchFailure({ executable: "/opt/chrome", output: "something else", platform: "darwin" })).toBeNull();
     expect(sandboxDisabled({})).toBe(false);

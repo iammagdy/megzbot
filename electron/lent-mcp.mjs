@@ -60,7 +60,7 @@ export function lentMcpRefusal(grant, server) {
   return null;
 }
 
-/** This computer's own OpenMausBot installs, by the environment id each keeps in its data folder. */
+/** This computer's own MEGZbot installs, by the environment id each keeps in its data folder. */
 export function ownEnvironmentIds(dataDirs) {
   const ids = new Set();
   for (const dir of dataDirs) {
@@ -129,7 +129,7 @@ function stdioClient(server, { environment, home }) {
     let message; try { message = JSON.parse(line); } catch { return; }
     if (!record(message)) return;
     // A server's own request (roots, sampling) is one this client does not offer.
-    if (typeof message.method === "string" && Object.hasOwn(message, "id")) return void write({ jsonrpc: "2.0", id: message.id, error: { code: -32601, message: "Not offered by OpenMausBot" } });
+    if (typeof message.method === "string" && Object.hasOwn(message, "id")) return void write({ jsonrpc: "2.0", id: message.id, error: { code: -32601, message: "Not offered by MEGZbot" } });
     const waiting = pending.get(message.id);
     if (!waiting) return;
     pending.delete(message.id); bytes = 0;
@@ -245,7 +245,7 @@ export function createLentMcp({ environment = async () => ({ ...inheritedEnviron
     const client = "command" in server ? stdioClient(server, { environment: await environment(), home }) : httpClient(server, { fetch: fetchImpl });
     const live = { key, client, idle: null, failed: false, started: null };
     running.set(server.name, live);
-    live.started = client.request("initialize", { protocolVersion: PROTOCOL, capabilities: {}, clientInfo: { name: "openmausbot-lent", version: "1" } }, signal, START_MS).then(result => {
+    live.started = client.request("initialize", { protocolVersion: PROTOCOL, capabilities: {}, clientInfo: { name: "megzbot-lent", version: "1" } }, signal, START_MS).then(result => {
       client.started?.(result?.protocolVersion);
       client.notify("notifications/initialized");
     });

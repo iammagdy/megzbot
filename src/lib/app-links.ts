@@ -1,5 +1,5 @@
-export const APP_NAME = "OpenMausBot";
-export const APP_REPOSITORY = "https://github.com/milind-soni/OpenMausBot";
+export const APP_NAME = "MEGZbot";
+export const APP_REPOSITORY = "https://github.com/iammagdy/megzbot";
 export const DOCS_URL = `${APP_REPOSITORY}/tree/main/docs`;
 export const HELP_CENTER_URL = DOCS_URL;
 export const APPROVAL_LEVELS_URL = `${APP_REPOSITORY}/blob/main/docs/approval-levels.md`;
@@ -14,8 +14,8 @@ export function withSource(url: string, source: string): string {
   return target.href;
 }
 export const LICENSE_URL = `${APP_REPOSITORY}/blob/main/LICENSE`;
-export const IOS_APP_STORE_URL = "https://apps.apple.com/in/app/mausbot/id6803387923";
-export const ANDROID_APK_URL = `${APP_REPOSITORY}/releases/download/android-v1.5.0/OpenMausBot.apk`;
+export const IOS_APP_STORE_URL = "https://apps.apple.com/in/app/megzbot/id6803387923";
+export const ANDROID_APK_URL = `${APP_REPOSITORY}/releases/download/android-v1.5.0/MEGZbot.apk`;
 
 export function appVersion(): string {
   return typeof __APP_VERSION__ === "string" ? __APP_VERSION__ : "dev";

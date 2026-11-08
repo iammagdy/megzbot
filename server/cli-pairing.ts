@@ -1,4 +1,4 @@
-// What `openmausbot serve` and `openmausbot pair` print for a pairing code. A browser on this computer is no longer the
+// What `megzbot serve` and `megzbot pair` print for a pairing code. A browser on this computer is no longer the
 // owner just by being here, so it signs in once with the link printed for it.
 import qrcode from "qrcode-terminal";
 
@@ -43,7 +43,7 @@ export function pairingBlock(input: {
   lines.push(`Link           ${input.link}`);
   lines.push("");
   lines.push("  Desktop app   ＋ → Connect to a server, paste the link");
-  lines.push(scanInvite ? "  Phone         scan this with the MausBot app" : "  Phone         scan with your camera or the MausBot app");
+  lines.push(scanInvite ? "  Phone         scan this with the MEGZbot app" : "  Phone         scan with your camera or the MEGZbot app");
   lines.push("");
   lines.push(qrToString(scanInvite ? input.inviteUrl! : input.link));
   if (!input.chatOnly) lines.push(`For a phone (chat and approvals only)   ${input.prefix} pair --phone`);

@@ -37,7 +37,7 @@ describe("the sidecar's end-to-end connection, through the real relay", () => {
     deviceToken = paired.token;
     deviceId = paired.id;
     expect((await http(paired.session, "GET", "/api/threads/t1/messages", { token: "omb_other" })).status).toBe(401);
-    expect(json(await http(paired.session, "GET", "/api/health", { token: deviceToken }))).toEqual({ app: "openmausbot" });
+    expect(json(await http(paired.session, "GET", "/api/health", { token: deviceToken }))).toEqual({ app: "megzbot" });
     expect((await state()).devices).toEqual([expect.objectContaining({ id: deviceId, route: "relay", routes: "any", e2eAt: expect.any(Number) })]);
     paired.session.shutdown();
   });

@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
-  "name": "openmausbot-control-plane",
+  "name": "megzbot-control-plane",
   "main": "src/index.ts",
   "account_id": "0c92969a82eb9e173b013a7e7a02333d",
   "compatibility_date": "2026-08-25",
@@ -63,7 +63,7 @@
     // Cleanup rows per five-minute cron run. 20 needs Workers Paid; use 4 on
     // Workers Free (50 subrequests per invocation).
     "OMB_CLEANUP_SWEEP_LIMIT": "20",
-    // MausBot Relay (README "MausBot Relay"). Host tokens are signed with RELAY_TOKEN_SIGNING_KEY (b64u of a 32-byte
+    // MEGZbot Relay (README "MEGZbot Relay"). Host tokens are signed with RELAY_TOKEN_SIGNING_KEY (b64u of a 32-byte
     // Ed25519 seed, `wrangler secret put`). It is in secrets.required so a deploy can't drop it: set it before the
     // first deploy that lists it. The relay holds only the matching public key. RELAY_NODES lists only nodes that
     // exist; add relay2 when its box and DNS are up.
@@ -85,7 +85,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "openmausbot-control-plane",
+      "database_name": "megzbot-control-plane",
       "database_id": "8a7c34ed-5428-4ae2-8722-fef2fe9bf160",
       "migrations_dir": "migrations"
     }

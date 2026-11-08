@@ -2394,7 +2394,7 @@ describe("DATA_DIR outside the suite's throwaway home", () => {
     const realHome = userInfo().homedir;
     const dataDir = childDataDir({ HOME: realHome, USERPROFILE: realHome, VITEST: "true" });
     try {
-      expect(dataDir).not.toBe(join(realHome, ".openmausbot"));
+      expect(dataDir).not.toBe(join(realHome, ".megzbot"));
       expect(dataDir.startsWith(tmpdir())).toBe(true);
     } finally {
       // Only ever a throwaway folder: a broken guard would hand back the real home here.
@@ -2408,7 +2408,7 @@ describe("DATA_DIR outside the suite's throwaway home", () => {
   it("treats an empty OMB_DATA_DIR as unset", () => {
     const home = mkdtempSync(join(tmpdir(), "omb-config-home-"));
     try {
-      expect(childDataDir({ HOME: home, USERPROFILE: home, OMB_DATA_DIR: "" })).toBe(join(home, ".openmausbot"));
+      expect(childDataDir({ HOME: home, USERPROFILE: home, OMB_DATA_DIR: "" })).toBe(join(home, ".megzbot"));
     } finally {
       rmSync(home, { recursive: true, force: true });
     }
@@ -2417,7 +2417,7 @@ describe("DATA_DIR outside the suite's throwaway home", () => {
   it("keeps the home folder outside tests", () => {
     const home = mkdtempSync(join(tmpdir(), "omb-config-home-"));
     try {
-      expect(childDataDir({ HOME: home, USERPROFILE: home })).toBe(join(home, ".openmausbot"));
+      expect(childDataDir({ HOME: home, USERPROFILE: home })).toBe(join(home, ".megzbot"));
     } finally {
       rmSync(home, { recursive: true, force: true });
     }

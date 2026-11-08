@@ -41,7 +41,12 @@ jobs:
       - name: clean build outputs
         shell: bash
         run: rm -rf dist dist-server release
-      - run: pnpm package:win
+      - name: Package the Windows installer
+        # Node's default heap stops near 2 GB and `tsc -b` in `pnpm build`
+        # needs more; windows-latest has 16 GB.
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+        run: pnpm package:win
       - name: Verify the bundled browser with an empty home
         run: node scripts/smoke-browser-bundle.mjs --resources "${{ github.workspace }}/release/win-unpacked/resources"
       - name: Verify the packaged server discovers its browser
@@ -85,17 +90,9 @@ jobs:
             "$res/cloudflared/cloudflared.exe" version | grep -Fq "cloudflared version 2026.10.3 " || {
               echo "::error::packaged cloudflared has the wrong version"; fail=1; }
           fi
-          [ -f "$res/app-update.yml" ] || { echo "::error::missing $res/app-update.yml"; fail=1; }
-          if [ -f "$res/app-update.yml" ]; then
-            grep -Eq '^repo: OpenMausBot$' "$res/app-update.yml" || {
-              echo "::error::app-update.yml does not point at milind-soni/OpenMausBot"; fail=1; }
-            # while the build is unsigned, a publisherName makes
-            # electron-updater reject every update as untrusted
-            if grep -q "publisherName" "$res/app-update.yml"; then
-              echo "::error::app-update.yml carries publisherName on an unsigned build"; fail=1
-            fi
-          fi
-          echo "--- app-update.yml ---"; cat "$res/app-update.yml" 2>/dev/null || true
+          # No app-update.yml check: auto-update is disabled by design for this
+          # private build. The publish block was removed from electron-builder.yml,
+          # so electron-builder never generates app-update.yml.
           exit $fail
 
       # index.js EXISTING is not the same as index.js RUNNING. 0.1.24 shipped a

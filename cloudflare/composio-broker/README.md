@@ -1,4 +1,4 @@
-# OpenMausBot connected-apps broker
+# MEGZbot connected-apps broker
 
 This Worker keeps the shared Composio project key out of desktop builds. Each
 installation receives a random bearer token stored only as a SHA-256 hash in
@@ -11,7 +11,7 @@ only on demand and are never persisted in chat messages.
 Deployment for this repository:
 
 1. `pnpm broker:types`
-2. `pnpm exec wrangler d1 migrations apply openmausbot-composio --remote --config cloudflare/composio-broker/wrangler.jsonc`
+2. `pnpm exec wrangler d1 migrations apply megzbot-composio --remote --config cloudflare/composio-broker/wrangler.jsonc`
 3. For an existing Worker, run `pnpm exec wrangler secret put COMPOSIO_API_KEY --config cloudflare/composio-broker/wrangler.jsonc`, then `pnpm broker:deploy`.
 4. For the very first deploy, put `COMPOSIO_API_KEY=...` in the ignored `.dev.vars.production` file and run `pnpm exec wrangler deploy --config cloudflare/composio-broker/wrangler.jsonc --secrets-file .dev.vars.production`. Delete the file immediately afterward.
 
@@ -129,7 +129,7 @@ changes nothing.
 
 1. Apply the migration before deploying the code (the old code ignores the
    new tables and columns):
-   `pnpm exec wrangler d1 migrations apply openmausbot-composio --remote --config cloudflare/composio-broker/wrangler.jsonc`
+   `pnpm exec wrangler d1 migrations apply megzbot-composio --remote --config cloudflare/composio-broker/wrangler.jsonc`
 2. Deploy as usual (`wrangler versions upload --preview-alias <name>`, check,
    then `wrangler versions deploy`). Until step 4 the webhook route answers
    503 and no client calls the new routes.
@@ -141,7 +141,7 @@ changes nothing.
    curl -sS https://backend.composio.dev/api/v3.1/webhook_subscriptions -H "x-api-key: $COMPOSIO_API_KEY"
    curl -sS -X POST https://backend.composio.dev/api/v3.1/webhook_subscriptions \
      -H "x-api-key: $COMPOSIO_API_KEY" -H "content-type: application/json" \
-     -d '{"webhook_url":"https://openmausbot-composio.milindsoni201.workers.dev/v1/composio/webhook","enabled_events":["composio.trigger.message","composio.trigger.disabled","composio.connected_account.expired"],"version":"V3"}'
+     -d '{"webhook_url":"https://megzbot-composio.milindsoni201.workers.dev/v1/composio/webhook","enabled_events":["composio.trigger.message","composio.trigger.disabled","composio.connected_account.expired"],"version":"V3"}'
    ```
 
    If Composio refuses `composio.trigger.disabled`, leave it out: the server's

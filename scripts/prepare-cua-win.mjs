@@ -43,7 +43,7 @@ async function binaryVersion(candidate) {
 }
 
 async function officialBinary() {
-  const cache = join(root, "node_modules", ".cache", "openmausbot", `cua-driver-${release.version}-win`);
+  const cache = join(root, "node_modules", ".cache", "megzbot", `cua-driver-${release.version}-win`);
   const cachedBinary = join(cache, "cua-driver.exe");
   if ((await binaryVersion(cachedBinary)) === expectedVersion) return cachedBinary;
 
@@ -52,7 +52,7 @@ async function officialBinary() {
   const url = `https://github.com/trycua/cua/releases/download/cua-driver-rs-v${release.version}/${release.file}`;
   console.log(`Downloading CUA Driver ${release.version} from the official release…`);
   const response = await fetch(url, {
-    headers: { "user-agent": "OpenMausBot-packager" },
+    headers: { "user-agent": "MEGZbot-packager" },
     signal: AbortSignal.timeout(120_000),
   });
   if (!response.ok) throw new Error(`CUA Driver download failed: HTTP ${response.status}`);
@@ -132,7 +132,7 @@ await build({
       'export { EmbeddedCuaDriverHost } from "@trycua/cua-driver/embedded";',
     ].join("\n"),
     resolveDir: root,
-    sourcefile: "openmausbot-cua-entry.mjs",
+    sourcefile: "megzbot-cua-entry.mjs",
     loader: "js",
   },
   bundle: true,
@@ -140,7 +140,7 @@ await build({
   target: "node20",
   format: "esm",
   banner: {
-    js: 'import { createRequire as __openmausbotCreateRequire } from "node:module"; const require = __openmausbotCreateRequire(import.meta.url);',
+    js: 'import { createRequire as __megzbotCreateRequire } from "node:module"; const require = __megzbotCreateRequire(import.meta.url);',
   },
   outfile: bundle,
   logLevel: "silent",

@@ -112,11 +112,11 @@ export function lentLine(name: string, state: Exclude<LentState, { kind: "ready"
   const { computer, device } = state;
   const theirs = personal && device !== "computer" ? `your ${device} (${computer})` : computer;
   switch (state.kind) {
-    case "offline": return `${name} runs on ${theirs}, which is offline right now: OpenMausBot on it is closed, or the ${device} is asleep or off.`;
-    case "stopped": return `${name} runs on ${theirs}, which no longer lends itself to ${place}: OpenMausBot on it is paused or signed out.`;
-    case "never": return `${name} runs on ${theirs}, which isn't lent to ${place}: it works once OpenMausBot is open on that computer and signed in to ${place}.`;
-    case "outdated": return `${name} runs on ${theirs}, whose OpenMausBot is too old to run it for ${place}: update OpenMausBot on that ${device}.`;
-    case "no-terminal": return `${name} starts a program on ${theirs}, which doesn't let ${place} run programs right now: turn on "Let Clouds run commands on this ${device}" from the OpenMausBot icon on that ${device}.`;
+    case "offline": return `${name} runs on ${theirs}, which is offline right now: MEGZbot on it is closed, or the ${device} is asleep or off.`;
+    case "stopped": return `${name} runs on ${theirs}, which no longer lends itself to ${place}: MEGZbot on it is paused or signed out.`;
+    case "never": return `${name} runs on ${theirs}, which isn't lent to ${place}: it works once MEGZbot is open on that computer and signed in to ${place}.`;
+    case "outdated": return `${name} runs on ${theirs}, whose MEGZbot is too old to run it for ${place}: update MEGZbot on that ${device}.`;
+    case "no-terminal": return `${name} starts a program on ${theirs}, which doesn't let ${place} run programs right now: turn on "Let Clouds run commands on this ${device}" from the MEGZbot icon on that ${device}.`;
   }
 }
 
@@ -185,7 +185,7 @@ export function createLentMcp(deps: LentMcpDeps) {
     const { id, method } = message;
     if (method === "initialize") {
       const asked = (message.params as { protocolVersion?: unknown } | undefined)?.protocolVersion;
-      return reply(id, { protocolVersion: PROTOCOLS.includes(String(asked)) ? asked : "2025-03-26", capabilities: { tools: {} }, serverInfo: { name: `openmausbot-${name}`, version: "1" } });
+      return reply(id, { protocolVersion: PROTOCOLS.includes(String(asked)) ? asked : "2025-03-26", capabilities: { tools: {} }, serverInfo: { name: `megzbot-${name}`, version: "1" } });
     }
     if (method === "ping") return reply(id, {});
     if (method !== "tools/list" && method !== "tools/call") return rpcError(id, "Method not found.", -32601);

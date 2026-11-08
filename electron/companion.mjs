@@ -110,7 +110,7 @@ async function control(method, urlPath, body, { timeoutMs = 4_000 } = {}) {
   const options = {
     method,
     signal: AbortSignal.timeout(timeoutMs),
-    headers: { "x-openmausbot-control-token": controlToken },
+    headers: { "x-megzbot-control-token": controlToken },
   };
   if (body !== undefined) {
     options.body = JSON.stringify(body);

@@ -256,7 +256,7 @@ function harness(get: () => { world: HomeWorld; shots: string }) {
     await page(`document.querySelector('${composer}').focus()`);
     await world.window.cdp.request("Input.insertText", { text: "Sort the quarterly notes" }, world.window.sessionId);
     for (const type of ["keyDown", "keyUp"]) await world.window.cdp.request("Input.dispatchKeyEvent", { type, key: "Enter", code: "Enter", windowsVirtualKeyCode: 13 }, world.window.sessionId);
-    const busy = await until(async () => (await fetch(`${fx.desktopBase}/api/move/freeze`, { headers: { "x-openmausbot-desktop-owner": fx.ownerCapability } }).then((response) => response.json())).busy as string | undefined,
+    const busy = await until(async () => (await fetch(`${fx.desktopBase}/api/move/freeze`, { headers: { "x-megzbot-desktop-owner": fx.ownerCapability } }).then((response) => response.json())).busy as string | undefined,
       (name) => typeof name === "string" && name.length > 0, 30_000, "the turn under way");
     await click(MAC);
     await until(() => tiles(), (seen) => seen.find((tile) => tile.id === "profile:default")?.label === `This Mac opens once ${busy} finishes`, 15_000, "This Mac's circle saying it waits");

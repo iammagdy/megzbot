@@ -54,7 +54,7 @@ export function serverRequests(place, fetchImpl) {
     request,
     call: async (method, route, body) => answer(await request(method, route, body === undefined ? {} : { headers: { "content-type": "application/json" }, body: JSON.stringify(body) })),
     async who() {
-      const [session, described] = await Promise.all([request("GET", "/api/auth/session").then(answer), request("GET", "/.well-known/openmausbot/environment").then(answer)]);
+      const [session, described] = await Promise.all([request("GET", "/api/auth/session").then(answer), request("GET", "/.well-known/megzbot/environment").then(answer)]);
       const signedIn = session.ok && session.body?.kind === "session";
       return { signedIn, own: signedIn && session.body.own === true, environmentId: typeof described.body?.environmentId === "string" ? described.body.environmentId : null,
         takesMove: Number(described.body?.capabilities?.move) >= 1, status: session.status };

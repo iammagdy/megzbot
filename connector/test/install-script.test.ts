@@ -28,13 +28,13 @@ function run(args: string[], options: { uid?: number; env?: Record<string, strin
   tool("docker", `echo "docker $*" >> "${log}"
 case "$*" in
   "ps -aq --filter label=${LABELS.role}=helper") echo helper-1 ;;
-  "volume ls -q --filter label=${LABELS.role}=backup") echo mausbot-backup-20261028-000000-ab12; echo mausbot-backup-20261029-000000-cd34 ;;
+  "volume ls -q --filter label=${LABELS.role}=backup") echo megzbot-backup-20261028-000000-ab12; echo megzbot-backup-20261029-000000-cd34 ;;
 esac`);
   tool("id", `echo ${options.uid ?? 0}`);
   tool("apparmor_parser", `echo "apparmor_parser $*" >> "${log}"`);
-  const etc = join(dir, "etc-mausbot");
+  const etc = join(dir, "etc-megzbot");
   const apparmor = join(dir, "apparmor.d");
-  const audit = join(dir, "log-mausbot");
+  const audit = join(dir, "log-megzbot");
   mkdirSync(etc);
   mkdirSync(apparmor);
   mkdirSync(audit);
@@ -45,7 +45,7 @@ esac`);
     encoding: "utf8",
     env: {
       PATH: `${bin}:/usr/bin:/bin`, MAUSBOT_ETC_DIR: etc, MAUSBOT_APPARMOR_DIR: apparmor, MAUSBOT_AUDIT_DIR: audit,
-      MAUSBOT_ADMIN_URL: "https://cloud.example.test", MAUSBOT_CONNECTOR_IMAGE: `ghcr.io/milind-soni/mausbot-connector@sha256:${"1".repeat(64)}`,
+      MAUSBOT_ADMIN_URL: "https://cloud.example.test", MAUSBOT_CONNECTOR_IMAGE: `ghcr.io/iammagdy/megzbot-connector@sha256:${"1".repeat(64)}`,
       ...options.env,
     },
     timeout: 30_000,
@@ -63,7 +63,7 @@ describe("install.sh", () => {
     for (const bashism of [/\[\[/, /\bfunction\s+\w+/, /\blocal\s/, /<<</, /\$\{[A-Za-z_]+\[/, /\bsource\s/, /&>/]) expect(script, String(bashism)).not.toMatch(bashism);
   });
 
-  it("names the same Docker objects, labels and profiles as the connector, and waits for MausBot to fill in its address and image", () => {
+  it("names the same Docker objects, labels and profiles as the connector, and waits for MEGZbot to fill in its address and image", () => {
     const value = (name: string) => new RegExp(`^${name}=(\\S+)$`, "m").exec(script)?.[1];
     expect(value("CONNECTOR")).toBe(NAMES.connector);
     expect(value("CONNECTOR_NEXT")).toBe(NAMES.connectorNext);
@@ -76,12 +76,12 @@ describe("install.sh", () => {
     expect(value("SECCOMP")).toBe(SECCOMP_FILE);
     expect(script).toContain('ADMIN_URL="${MAUSBOT_ADMIN_URL:-@MAUSBOT_ADMIN_URL@}"');
     expect(script).toContain('CONNECTOR_IMAGE="${MAUSBOT_CONNECTOR_IMAGE:-@MAUSBOT_CONNECTOR_IMAGE@}"');
-    expect(script).toContain(`say "Connected. Your server shows up in MausBot in a minute, for your team's Owner to accept."`);
-    expect(script).toContain(`com.mausbot.instance=$instance`);
+    expect(script).toContain(`say "Connected. Your server shows up in MEGZbot in a minute, for your team's Owner to accept."`);
+    expect(script).toContain(`com.megzbot.instance=$instance`);
     expect(script).toContain("--restart unless-stopped --network host");
-    expect(script).toContain("-v /var/run/docker.sock:/var/run/docker.sock -v \"$STATE_VOLUME:/state\" -v \"$ETC_DIR:/etc/mausbot:ro\" -v \"$AUDIT_DIR:/var/log/mausbot\"");
-    expect(script).toContain('AUDIT_DIR="${MAUSBOT_AUDIT_DIR:-/var/log/mausbot}"');
-    expect(PATHS.audit).toBe("/var/log/mausbot");
+    expect(script).toContain("-v /var/run/docker.sock:/var/run/docker.sock -v \"$STATE_VOLUME:/state\" -v \"$ETC_DIR:/etc/megzbot:ro\" -v \"$AUDIT_DIR:/var/log/megzbot\"");
+    expect(script).toContain('AUDIT_DIR="${MAUSBOT_AUDIT_DIR:-/var/log/megzbot}"');
+    expect(PATHS.audit).toBe("/var/log/megzbot");
     expect(script).toContain('apparmor_parser -r -W "$APPARMOR_DIR/$PROFILE"');
   });
 
@@ -92,7 +92,7 @@ describe("install.sh", () => {
       `docker rm -f ${NAMES.connector} ${NAMES.connectorNext}`, `docker stop -t 30 ${NAMES.home}`, `docker rm -f ${NAMES.home}`, "docker rm -f helper-1",
       `docker volume rm ${NAMES.stateVolume}`,
     ]));
-    expect(result.calls.filter((call) => /volume rm (mausbot-data|mausbot-snapshot|mausbot-backup-)/.test(call))).toEqual([]);
+    expect(result.calls.filter((call) => /volume rm (megzbot-data|megzbot-snapshot|megzbot-backup-)/.test(call))).toEqual([]);
     expect(result.calls.some((call) => call.startsWith("apparmor_parser -R "))).toBe(true);
     expect(existsSync(join(result.apparmor, APPARMOR_PROFILE))).toBe(false);
     expect(existsSync(result.etc)).toBe(false);
@@ -106,9 +106,9 @@ describe("install.sh", () => {
     expect(deleted.status, deleted.stderr).toBe(0);
     expect(deleted.calls).toEqual(expect.arrayContaining([
       `docker volume rm ${NAMES.dataVolume}`, `docker volume rm ${NAMES.snapshotVolume}`,
-      "docker volume rm mausbot-backup-20261028-000000-ab12", "docker volume rm mausbot-backup-20261029-000000-cd34",
+      "docker volume rm megzbot-backup-20261028-000000-ab12", "docker volume rm megzbot-backup-20261029-000000-cd34",
     ]));
-    expect(deleted.stdout).toContain("MausBot is removed from this server, and so is its data.");
+    expect(deleted.stdout).toContain("MEGZbot is removed from this server, and so is its data.");
     expect(existsSync(deleted.audit)).toBe(false);
     for (const typo of [["uninstall", "--delete-dat"], ["uninstall", "--delete-data=yes"], ["uninstall", "-f"]]) {
       const refused = run(typo);
@@ -118,15 +118,15 @@ describe("install.sh", () => {
     }
   });
 
-  it.skipIf(!posix)("says in plain words what to run instead: as root, from MausBot's own command, with a code as MausBot shows it", () => {
+  it.skipIf(!posix)("says in plain words what to run instead: as root, from MEGZbot's own command, with a code as MEGZbot shows it", () => {
     const user = run(["MB-1A2B-3C4D"], { uid: 1000 });
     expect(user.status).toBe(1);
     expect(user.stderr).toContain("Please run this as root: put sudo before sh, like this: curl -fsSL https://cloud.example.test/install.sh | sudo sh -s -- MB-1A2B-3C4D");
     expect(run(["uninstall"], { uid: 1000 }).stderr).toContain("Please run this as root");
     const copied = run(["MB-1A2B-3C4D"], { env: { MAUSBOT_ADMIN_URL: "", MAUSBOT_CONNECTOR_IMAGE: "" } });
-    expect(copied.stderr).toContain("This installer was not downloaded from MausBot. Copy the install command from MausBot and run that.");
+    expect(copied.stderr).toContain("This installer was not downloaded from MEGZbot. Copy the install command from MEGZbot and run that.");
     const odd = run(["MB-1A2B;reboot"]);
-    expect(odd.stderr).toContain("That code doesn't look right. Copy the install command from MausBot again.");
+    expect(odd.stderr).toContain("That code doesn't look right. Copy the install command from MEGZbot again.");
     expect(odd.calls).toEqual([]);
   });
 });

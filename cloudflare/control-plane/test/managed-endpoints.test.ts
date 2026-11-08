@@ -9,7 +9,7 @@ import { cleanupEndpointRow, sweepManagedEndpointCleanup } from "../src/endpoint
 import { createWorker } from "../src/index";
 import { forgetCachedCapacity } from "../src/tunnel-capacity";
 
-const BASE_URL = "https://auth.openmausbot.test";
+const BASE_URL = "https://auth.megzbot.test";
 const CONNECTOR_TOKEN = "eyJhbGciOiJIUzI1NiJ9.test-only-connector-token.signature";
 /** An endpoint whose hostname is not under its account's suffix refuses to act. */
 const HOST_SUFFIX = env.COMPANION_HOST_SUFFIX;
@@ -1192,7 +1192,7 @@ describe("managed companion endpoints", () => {
     cloudflare.dns.set(hostname, {
       ...record,
       content: "203.0.113.50",
-      name: "repurposed.openmausbot.test",
+      name: "repurposed.megzbot.test",
       proxied: false,
       type: "A",
     });
@@ -1206,7 +1206,7 @@ describe("managed companion endpoints", () => {
     expect(cloudflare.calls.some((entry) => entry.method === "DELETE")).toBe(false);
     expect(cloudflare.dns.get(hostname)).toMatchObject({
       content: "203.0.113.50",
-      name: "repurposed.openmausbot.test",
+      name: "repurposed.megzbot.test",
       type: "A",
     });
     const retained = await env.DB.prepare(
@@ -2195,7 +2195,7 @@ describe("managed endpoint provider capacity", () => {
     const text = await response.text();
     expect(JSON.parse(text)).toMatchObject({
       ok: true,
-      service: "openmausbot-control-plane",
+      service: "megzbot-control-plane",
       capacity: {
         checkedAt: expect.any(Number),
         dnsRecords: { limit: 3500, used: 400 },
@@ -2231,7 +2231,7 @@ const SECOND_ACCOUNT_ID = "2b".repeat(16);
 const SECOND_ZONE_ID = "3c".repeat(16);
 const SECOND_SUFFIX = "mausbot.si";
 const SECOND_TOKEN_SECRET = "CLOUDFLARE_API_TOKEN_MAUSBOT_SI";
-const SECOND_TOKEN = "test-only-mausbot-si-api-token-with-no-real-access";
+const SECOND_TOKEN = "test-only-megzbot-si-api-token-with-no-real-access";
 
 interface AccountsFixture {
   env: Env;
@@ -3339,7 +3339,7 @@ describe("managed endpoints in several Cloudflare accounts", () => {
     const text = await response.text();
     expect(JSON.parse(text)).toEqual({
       ok: true,
-      service: "openmausbot-control-plane",
+      service: "megzbot-control-plane",
       capacity: {
         status: "ok",
         checkedAt: now - 120_000,

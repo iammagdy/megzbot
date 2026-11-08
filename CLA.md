@@ -1,7 +1,7 @@
-# OpenMausBot Contributor License Agreement
+# MEGZbot Contributor License Agreement
 
 This agreement covers contributions to the `enterprise/` directory of the
-OpenMausBot repository, which is licensed under the OpenMausBot Enterprise
+MEGZbot repository, which is licensed under the MEGZbot Enterprise
 License rather than Apache 2.0. Contributions anywhere else do not require
 this agreement or a DCO sign-off (see [LICENSING.md](LICENSING.md)).
 
@@ -12,12 +12,12 @@ You sign by commenting on your pull request:
 It applies to every contribution you make to `enterprise/` from then on. It is
 modelled on the Apache Individual Contributor License Agreement, shortened.
 
-1. **Copyright license.** You grant Milind Soni ("the Project Owner") and
+1. **Copyright license.** You grant Magdy ("the Project Owner") and
    recipients of software distributed by the Project Owner a perpetual,
    worldwide, non-exclusive, no-charge, royalty-free, irrevocable license to
    reproduce, prepare derivative works of, publicly display, publicly perform,
    sublicense, and distribute your contribution and such derivative works,
-   under any license, including the OpenMausBot Enterprise License and the
+   under any license, including the MEGZbot Enterprise License and the
    Apache License 2.0.
 2. **Patent license.** You grant the same parties a perpetual, worldwide,
    non-exclusive, no-charge, royalty-free, irrevocable patent license to make,
