@@ -1517,6 +1517,8 @@ process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,result})+'\\n');});`)
     });
 
     it("passes the person's proxy settings to the proxy, which Codex would otherwise drop", async () => {
+      vi.stubEnv("NO_PROXY", undefined);
+      vi.stubEnv("no_proxy", undefined);
       plan();
       await create({ authMode: "chatgpt-plan", environment: { HTTPS_PROXY: "http://proxy.example.test:3128", NODE_EXTRA_CA_CERTS: "/etc/corp-ca.pem" } });
       const dump = join(scratch, "plan-proxy-env.json");

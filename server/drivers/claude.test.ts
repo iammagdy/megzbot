@@ -477,6 +477,7 @@ describe("ClaudeDriver turns (fake CLI)", () => {
   });
 
   afterEach(async () => {
+    vi.unstubAllEnvs();
     delete process.env.FAKE_CLAUDE_MODE;
     delete process.env.FAKE_CLAUDE_AUTO_UNAVAILABLE_MODELS;
     delete process.env.FAKE_CLAUDE_DUMP;
@@ -3918,6 +3919,7 @@ describe("ClaudeDriver turns (fake CLI)", () => {
   });
 
   it("runs every one-off call on Haiku 5.5 without thinking or hooks, by settings, and leaves a chat turn as it was", async () => {
+    vi.stubEnv("MAX_THINKING_TOKENS", undefined);
     await create(undefined, { FAKE_CLAUDE_VERSION: "2.1.296" });
     const dump = join(scratch, "no-thinking.json");
     process.env.FAKE_CLAUDE_DUMP = dump;
