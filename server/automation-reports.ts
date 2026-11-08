@@ -83,7 +83,9 @@ const saidLine = (message: Message) => message.role === "bot" && message.kind ==
 const turnOfLine = (message: Message) => message.turnId ?? message.sentInTurn;
 
 type Waiting =
-  | { kind: "reply"; run: RoutineRun; messageId?: string }
+  /** `messageId`: the line the run's reply is read from; null when its last turn said and sent nothing, absent when it is
+   * unknown (a report still waiting after a restart). */
+  | { kind: "reply"; run: RoutineRun; messageId?: string | null }
   | { kind: "failure"; run: RoutineRun; detail: string }
   | { kind: "card"; run: RoutineRun; threadId: string; messageId: string };
 
@@ -118,10 +120,14 @@ export function createAutomationReports(deps: AutomationReportDeps) {
     executionThreadId: run.threadId!, scheduledFor: run.scheduledFor, ...extra,
   });
 
-  /** The reply a run ends with: its last turn's last text, or after a restart the last one a turn settled on. */
-  const replyOf = (run: RoutineRun, messageId?: string) => {
+  /** The reply a run ends with: its last turn's last text, or after a restart the last line of the last turn that
+   * settled or sent a file. */
+  const replyOf = (run: RoutineRun, messageId?: string | null) => {
     const path = run.threadId ? store.activePath(run.threadId) : [];
-    return messageId ? path.find((message) => message.id === messageId) : path.findLast((message) => saidLine(message) && message.turnTerminal) ?? path.findLast(saidLine);
+    if (messageId !== undefined) return messageId === null ? undefined : path.find((message) => message.id === messageId);
+    const last = path.findLast((message) => saidLine(message) && (message.turnTerminal || message.sentInTurn !== undefined));
+    const turn = last?.sentInTurn;
+    return (turn ? path.findLast((message) => saidLine(message) && message.turnId === turn) ?? last : last) ?? path.findLast(saidLine);
   };
 
   /** The files the reply's turn sent the person, in order: its attach_file lines' and the reply's own, without the
@@ -262,7 +268,7 @@ export function createAutomationReports(deps: AutomationReportDeps) {
       const reply = read(run, said);
       const bot = store.bot(run.botId);
       const target = destination(run);
-      if (target && (!reply.quiet || lastSaidFailed(run, target.threadId))) hold(run.id, { kind: "reply", run, ...(said ? { messageId: said.id } : {}) });
+      if (target && (!reply.quiet || lastSaidFailed(run, target.threadId))) hold(run.id, { kind: "reply", run, messageId: said?.id ?? null });
       else if (reply.quiet) deps.routines()?.noteReport(run.id, { state: "quiet" });
       else if (bot) deps.notify("done", bot, run.threadId, reply.text);
     },

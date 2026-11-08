@@ -519,6 +519,43 @@ describe("automation reports", () => {
     expect(f.runs.get(run.id)!.report).toMatchObject({ state: "posted" });
   });
 
+  it("reports what a run's last turn sent after a restart, though that turn wrote no words", () => {
+    const f = fixture();
+    const run = f.finished(null);
+    const thread = run.threadId!;
+    sent(f.store, thread, "turn-before", pdf("Earlier"));
+    f.store.appendMessage(thread, { role: "bot", kind: "text", text: "Asked Sam to count the stock.", turnId: "turn-before", turnTerminal: true });
+    sent(f.store, thread, `turn-${run.id}`, pdf("Stock"));
+    f.busy.add(f.main);
+    f.reports.runSettled(run, `turn-${run.id}`);
+    f.busy.delete(f.main);
+    f.create().flush();
+    expect(f.lines()).toEqual([expect.objectContaining({ text: "", attachments: [pdf("Stock")] })]);
+  });
+
+  it("reads a run's words and the file it sent after them again after a restart", () => {
+    const f = fixture();
+    const run = f.finished(null);
+    f.store.appendMessage(run.threadId!, { role: "bot", kind: "text", text: "Your brief.", turnId: `turn-${run.id}`, turnTerminal: true });
+    sent(f.store, run.threadId!, `turn-${run.id}`, pdf("Brief"));
+    f.runs.get(run.id)!.report = { state: "pending" };
+    f.create().flush();
+    expect(f.lines()).toEqual([expect.objectContaining({ text: "Your brief.", attachments: [pdf("Brief")] })]);
+  });
+
+  it("says only that an automation recovered when the turn that resumed its run said and sent nothing", () => {
+    const f = fixture();
+    const failed = f.finished(null, "Inbox brief", { status: "failed", error: "Timed out" });
+    f.reports.runFailed(failed, "it ran past its 25-minute limit.");
+    const finishedAt = Date.UTC(2026, 9, 26, 2, 40);
+    const run = f.finished(null, "Inbox brief", { finishedAt });
+    sent(f.store, run.threadId!, "turn-before", pdf("Earlier"));
+    f.store.appendMessage(run.threadId!, { role: "bot", kind: "text", text: "Asked Sam to count the stock.", turnId: "turn-before", turnTerminal: true });
+    f.reports.runSettled(run, `turn-${run.id}`);
+    expect(f.lines().at(-1)).toMatchObject({ text: recoveredText("Inbox brief", finishedAt), automation: expect.objectContaining({ recovered: true }) });
+    expect(f.lines().at(-1)).not.toHaveProperty("attachments");
+  });
+
   it("still carries the turn's files when the person wrote in the run before its report was written", () => {
     const f = fixture();
     const run = f.finished(null);
