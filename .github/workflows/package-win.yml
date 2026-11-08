@@ -41,7 +41,12 @@ jobs:
       - name: clean build outputs
         shell: bash
         run: rm -rf dist dist-server release
-      - run: pnpm package:win
+      - name: Package the Windows installer
+        # Node's default heap stops near 2 GB and `tsc -b` in `pnpm build`
+        # needs more; windows-latest has 16 GB.
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+        run: pnpm package:win
       - name: Verify the bundled browser with an empty home
         run: node scripts/smoke-browser-bundle.mjs --resources "${{ github.workspace }}/release/win-unpacked/resources"
       - name: Verify the packaged server discovers its browser
