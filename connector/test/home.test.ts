@@ -11,7 +11,7 @@ import { StateStore, type Operation } from "../src/state.ts";
 import type { Transfer } from "../src/transfer.ts";
 import { FakeDocker } from "./fake-docker.ts";
 
-const image = (letter: string) => `ghcr.io/iammagdy/megzbot-cloud-home@sha256:${letter.repeat(64)}`;
+const image = (letter: string) => `ghcr.io/milind-soni/openmausbot-cloud-home@sha256:${letter.repeat(64)}`;
 const A = image("a"), B = image("b"), C = image("c"), D = image("d");
 const SECRET = "Bootstrap-secret-0123456789abcdefghijklmnopq";
 const RELAY = "box_omb_relay-token-0123456789abcdefghijklmnop";

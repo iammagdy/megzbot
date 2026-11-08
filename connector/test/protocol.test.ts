@@ -9,7 +9,7 @@ import {
 } from "../src/protocol.ts";
 import { generateKeyPair, seal, unseal } from "../src/signed.ts";
 
-const HOME = `ghcr.io/iammagdy/megzbot-cloud-home@sha256:${"a".repeat(64)}`;
+const HOME = `ghcr.io/milind-soni/openmausbot-cloud-home@sha256:${"a".repeat(64)}`;
 const CONNECTOR = `ghcr.io/iammagdy/megzbot-connector@sha256:${"b".repeat(64)}`;
 const env = {
   OMB_CLOUD_ROLE: "home", OMB_CLOUD_MACHINE_ID: "3f9c2a4e-8b1d-4c6e-9a7f-2d5e8c1b0a93", OMB_CLOUD_ADMIN_URL: "https://cloud.example.test",
@@ -35,10 +35,10 @@ describe("the connector protocol", () => {
     expect(image("update", HOME)).toBe(true);
     expect(image("self-update", CONNECTOR)).toBe(true);
     for (const value of [
-      "ghcr.io/iammagdy/megzbot-cloud-home:latest", "ghcr.io/iammagdy/megzbot-cloud-home:v0.1.130",
-      `ghcr.io/someone-else/megzbot-cloud-home@sha256:${"a".repeat(64)}`, `docker.io/library/ubuntu@sha256:${"a".repeat(64)}`,
-      `ghcr.io/iammagdy/megzbot-cloud-home@sha256:${"A".repeat(64)}`, `ghcr.io/iammagdy/megzbot-cloud-home@sha256:${"a".repeat(63)}`,
-      `ghcr.io/iammagdy/megzbot-cloud-home@sha256:${"a".repeat(64)} --privileged`, `ghcr.io/iammagdy/megzbot@sha256:${"a".repeat(64)}`,
+      "ghcr.io/milind-soni/openmausbot-cloud-home:latest", "ghcr.io/milind-soni/openmausbot-cloud-home:v0.1.130",
+      `ghcr.io/someone-else/openmausbot-cloud-home@sha256:${"a".repeat(64)}`, `docker.io/library/ubuntu@sha256:${"a".repeat(64)}`,
+      `ghcr.io/milind-soni/openmausbot-cloud-home@sha256:${"A".repeat(64)}`, `ghcr.io/milind-soni/openmausbot-cloud-home@sha256:${"a".repeat(63)}`,
+      `ghcr.io/milind-soni/openmausbot-cloud-home@sha256:${"a".repeat(64)} --privileged`, `ghcr.io/milind-soni/openmausbot@sha256:${"a".repeat(64)}`,
     ]) {
       expect(image("start", value), value).toBe(false);
       expect(image("update", value), value).toBe(false);

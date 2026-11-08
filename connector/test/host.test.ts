@@ -101,7 +101,7 @@ describe("speaking to Docker", () => {
 
   it("pulls by digest, and reads a failure Docker reports inside a 200 stream", () => {
     const digest = `sha256:${"a".repeat(64)}`;
-    expect(pullParams(`ghcr.io/iammagdy/megzbot-cloud-home@${digest}`)).toEqual({ fromImage: "ghcr.io/iammagdy/megzbot-cloud-home", tag: digest });
+    expect(pullParams(`ghcr.io/milind-soni/openmausbot-cloud-home@${digest}`)).toEqual({ fromImage: "ghcr.io/milind-soni/openmausbot-cloud-home", tag: digest });
     expect(pullParams("localhost:5000/x:tag")).toEqual({ fromImage: "localhost:5000/x", tag: "tag" });
     expect(pullParams("localhost:5000/x")).toEqual({ fromImage: "localhost:5000/x", tag: "latest" });
     expect(pullFailure('{"status":"Pulling fs layer"}\n{"errorDetail":{"message":"manifest unknown"},"error":"manifest unknown"}\n')).toBe("manifest unknown");
