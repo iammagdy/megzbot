@@ -7875,7 +7875,7 @@ describe("harness HTTP API", () => {
 
   it("a new bot greets its person by first name and is announced in its chosen look, or a fresh one, from the first frame", async () => {
     const before = (await api("GET", "/api/config")).body.profile?.name ?? "";
-    expect((await api("PUT", "/api/config", { profile: { name: "Magdy" } })).status).toBe(200);
+    expect((await api("PUT", "/api/config", { profile: { name: "Milind Soni" } })).status).toBe(200);
     const stream = await openSse(`${BASE}/api/events`);
     let id = "";
     try {
@@ -7908,7 +7908,7 @@ describe("harness HTTP API", () => {
       ids.push(created.body.bot.id);
       return created.body.bot;
     };
-    expect((await api("PUT", "/api/config", { profile: { name: "Magdy" }, features: { smartSetupChoices: true } })).status).toBe(200);
+    expect((await api("PUT", "/api/config", { profile: { name: "Milind Soni" }, features: { smartSetupChoices: true } })).status).toBe(200);
     try {
       writeFileSync(setupAnswersFile, `${JSON.stringify(answers)}\n`);
       rmSync(setupAnswersDump, { force: true });

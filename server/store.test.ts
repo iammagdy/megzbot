@@ -603,7 +603,7 @@ describe("Store", () => {
     const greeting = (name: string) => store.messagesFor(store.createBot({ name }).threadId)[0]?.text;
 
     expect(greeting("Ivy")).toBe("Hi, I'm Ivy. What would you like me to do?");
-    person = "Magdy";
+    person = "Milind Soni";
     expect(greeting("Scout")).toBe("Hi Milind, I'm Scout. What would you like me to do?");
   });
 
