@@ -2390,7 +2390,7 @@ async function orphanIn(
   return { hostname, installationId, tunnelName };
 }
 
-const ON_SECOND_ACCOUNT = /^c-[0-9a-f]{32}\.megzbot\.si$/;
+const ON_SECOND_ACCOUNT = /^c-[0-9a-f]{32}\.mausbot\.si$/;
 
 describe("managed endpoints in several Cloudflare accounts", () => {
   afterEach(() => {
