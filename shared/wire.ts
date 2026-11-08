@@ -466,9 +466,10 @@ export interface WireMessage extends ServerTextLine, HelperIntroField, SetupCard
     by: "person" | "harness";
   };
   /** Renderers receive only the allowlisted /api/attachments URL. `file` entries are opened through the message-scoped
-   * file route, never by path. `source`: a bot attach-file copy's original path on the server, for Show in folder. */
+   * file route, never by path. `source`: a bot attach-file copy's original path on the server, for Show in folder.
+   * `fromTool`: an image a tool's result returned while the bot worked, which it did not make or send. */
   attachments?: Array<
-    | { kind: "image"; path: string; mime: string; name?: string; source?: string }
+    | { kind: "image"; path: string; mime: string; name?: string; source?: string; fromTool?: true }
     | { kind: "file"; path: string; mime: string; name: string; source?: string }
     /** `text` is the words the note speaks (secret-redacted when stored): clients show it behind a
      * collapsed transcript, never as message body, and the model's replay folds it back after `text`. */
@@ -537,6 +538,9 @@ export interface WireMessage extends ServerTextLine, HelperIntroField, SetupCard
   sender?: ResolvedSender;
   /** Provider turn that produced this message. */
   turnId?: string;
+  /** A file line a turn posted with attach_file: the provider turn that sent it. Unlike `turnId`, it never makes the
+   * line that turn's reply. */
+  sentInTurn?: string;
   /** Server-proven originating user message, including supported harness
    * continuations. Absent means external clients must not infer ownership. */
   requestMessageId?: string;
