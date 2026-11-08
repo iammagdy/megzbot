@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 import { build } from "esbuild";
-import { afterAll, afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 import { CALL_TOOL, DESCRIBE_TOOL, INSTRUCTIONS_CHARS, SEARCH_TOOL, SIGNATURE_CHARS } from "./mcp-directory.ts";
 import { gateServer, mcpStdioServer } from "./mcp-gate-config.ts";
@@ -271,6 +271,7 @@ describe("remote MCP tool directory", () => {
   const json = (frame: Frame) => JSON.parse(frame.result.content[0].text);
 
   afterEach(async () => {
+    vi.unstubAllEnvs();
     if (child && child.exitCode === null && child.signalCode === null) {
       const closed = once(child, "close"); child.kill(); await closed;
     }
@@ -497,6 +498,7 @@ describe("remote MCP tool directory", () => {
   });
 
   it("reads its settings from a private record when mounts share one environment", async () => {
+    for (const name of ["HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy", "NO_PROXY", "no_proxy", "NODE_EXTRA_CA_CERTS", "SSL_CERT_FILE", "SSL_CERT_DIR"]) vi.stubEnv(name, undefined);
     fake = await startFakeHttpMcp({ tools: catalog });
     const record = `OMB_REMOTE_MCP_CONFIG_${"a".repeat(64)}`;
     const descriptor = mcpStdioServer(spec(fake.url), { directory: { name: "whop" }, configEnvName: record })!;
