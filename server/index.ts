@@ -1433,7 +1433,7 @@ type DesktopPrivateMessage = BrowserCleanupWireRequest | import("./login-handoff
   botId: string;
   held: true;
 } | {
-  type: "megzbot:phone-secret-save";
+  type: "openmausbot:phone-secret-save";
   requestId: string;
   target: string;
   value: string;

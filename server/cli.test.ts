@@ -120,7 +120,7 @@ describe("megzbot command line", () => {
     });
 
     it("gives an Android phone the app-scheme QR, because its scanner rejects https", () => {
-      const invite = `megzbot://pair?address=https%3A%2F%2Fmini.example&token=omb_pair_${"a".repeat(43)}&name=mini`;
+      const invite = `openmausbot://pair?address=https%3A%2F%2Fmini.example&token=omb_pair_${"a".repeat(43)}&name=mini`;
       const out = pairingBlock({ ...base, chatOnly: true, inviteUrl: invite, phone: "android" });
       expect(out).toContain(qrToString(invite));
       expect(out).not.toContain(qrToString(link));

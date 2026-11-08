@@ -74,7 +74,7 @@ app.whenReady().then(async () => {
   harness.postMessage({ type: "megzbot:desktop-mutation-token", token: owner, companionToken: relay });
   const sidecar = fork("dist-companion/index.js", env);
   // The app hands over the control token at spawn, as Electron main does; the relay credential comes later.
-  sidecar.once("spawn", () => sidecar.postMessage({ type: "megzbot:companion-mutation-token", controlToken: control }));
+  sidecar.once("spawn", () => sidecar.postMessage({ type: "openmausbot:companion-mutation-token", controlToken: control }));
   await until(() => api(controlPort, "/state", "GET", undefined, controlHeaders).catch(() => null));
   assert.equal((await api(controlPort, "/pairing", "POST")).status, 403, "control needs the app's token");
   const pairing = await api(controlPort, "/pairing", "POST", undefined, controlHeaders);
@@ -86,13 +86,13 @@ app.whenReady().then(async () => {
   assert.equal((await phone("/api/bots", "POST", {})).status, 503, "bootstrap must fail closed");
   // Reproduce the old relay: marker/device alone cannot authorize a mutation.
   assert.equal((await api(harnessPort, "/api/bots", "POST", {}, {
-    "x-megzbot-companion": "1", "x-megzbot-companion-device": paired.body.device.id,
+    "x-openmausbot-companion": "1", "x-openmausbot-companion-device": paired.body.device.id,
   })).status, 403);
-  sidecar.postMessage({ type: "megzbot:companion-mutation-token", token: relay });
+  sidecar.postMessage({ type: "openmausbot:companion-mutation-token", token: relay });
   await until(async () => (await phone("/api/bots")).status === 200);
   const created = await phone("/api/bots", "POST", { modelSelection: { instanceId: "claude", model: "claude-sonnet-5" } }, {
-    "x-megzbot-companion-auth": "forged", "x-megzbot-desktop-owner": "forged",
-    "x-megzbot-companion-device": "forged-device",
+    "x-openmausbot-companion-auth": "forged", "x-megzbot-desktop-owner": "forged",
+    "x-openmausbot-companion-device": "forged-device",
   });
   assert.equal(created.status, 201);
   const id = created.body.bot.id;
@@ -112,7 +112,7 @@ app.whenReady().then(async () => {
   const nextRelay = randomBytes(32).toString("base64url");
   harness.postMessage({ type: "megzbot:desktop-mutation-token", token: owner, companionToken: nextRelay });
   const restarted = fork("dist-companion/index.js", env);
-  restarted.once("spawn", () => restarted.postMessage({ type: "megzbot:companion-mutation-token", token: nextRelay, controlToken: control }));
+  restarted.once("spawn", () => restarted.postMessage({ type: "openmausbot:companion-mutation-token", token: nextRelay, controlToken: control }));
   await until(() => phone("/api/bots").then((r) => r.status === 200).catch(() => false));
   assert.equal((await phone(`/api/bots/${id}/read`, "POST", {})).status, 200);
   assert.equal((await api(phonePort, `/api/bots/${id}/read`, "POST", {})).status, 401);

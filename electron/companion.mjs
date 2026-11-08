@@ -244,7 +244,7 @@ async function start({ resourcesPath, harnessPort, mutationToken, hostedUrl = nu
   child.once("spawn", () => {
     // Never expose this capability in argv, environment, logs or the renderer.
     try {
-      child.postMessage({ type: "megzbot:companion-mutation-token", token: mutationToken, controlToken });
+      child.postMessage({ type: "openmausbot:companion-mutation-token", token: mutationToken, controlToken });
       const e2e = e2eHooks.initialMessage();
       if (e2e) child.postMessage(e2e);
     } catch {
@@ -253,7 +253,7 @@ async function start({ resourcesPath, harnessPort, mutationToken, hostedUrl = nu
     }
   });
   child.on("message", (message) => {
-    if (message?.type === "megzbot:companion-e2e-token-rejected") e2eHooks.tokenRejected();
+    if (message?.type === "openmausbot:companion-e2e-token-rejected") e2eHooks.tokenRejected();
   });
   child.stdout?.on("data", (d) => log?.(`[companion] ${String(d).trimEnd()}`));
   child.stderr?.on("data", (d) => log?.(`[companion err] ${String(d).trimEnd()}`));

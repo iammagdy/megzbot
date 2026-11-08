@@ -241,7 +241,7 @@ export function encodeResponse(
 export interface ServiceInfo {
   /** what a picker on the phone shows */
   name: string;
-  /** e.g. "_megzbot._tcp" */
+  /** e.g. "_openmausbot._tcp" */
   type: string;
   port: number;
   /** the name our A records claim, e.g. "megzbot-1a2b3c4d.local" */

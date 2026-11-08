@@ -38,9 +38,9 @@ describe("the connection key", () => {
 
   it("goes to the sidecar with the relay identity only once the computer holds a token", () => {
     const identity = createE2EIdentity();
-    expect(companionE2EMessage(identity, null)).toEqual({ type: "megzbot:companion-e2e", transportKey: identity.privateKey, relay: null });
+    expect(companionE2EMessage(identity, null)).toEqual({ type: "openmausbot:companion-e2e", transportKey: identity.privateKey, relay: null });
     expect(companionE2EMessage(identity, grant()).relay).toEqual({ hostId: HOST_ID, nodes: grant().nodes, relayToken: grant().token });
-    expect(companionE2EMessage(null, grant())).toEqual({ type: "megzbot:companion-e2e", transportKey: null, relay: null });
+    expect(companionE2EMessage(null, grant())).toEqual({ type: "openmausbot:companion-e2e", transportKey: null, relay: null });
   });
 });
 
@@ -140,13 +140,13 @@ describe("the desktop's end-to-end connection", () => {
     await new Promise((resolve) => setImmediate(resolve));
     expect(e2e.enabled).toBe(true);
     expect(readE2EIdentity(document)?.publicKey).toBe(e2e.publicKey);
-    expect(posted.at(-1)).toMatchObject({ type: "megzbot:companion-e2e", relay: { hostId: HOST_ID } });
+    expect(posted.at(-1)).toMatchObject({ type: "openmausbot:companion-e2e", relay: { hostId: HOST_ID } });
     answer = Object.assign(new Error("off"), { code: "relay_unavailable" });
     e2e.tokenRejected();
     await new Promise((resolve) => setImmediate(resolve));
-    expect(posted.at(-1)).toEqual({ type: "megzbot:companion-e2e", transportKey: readE2EIdentity(document).privateKey, relay: null });
+    expect(posted.at(-1)).toEqual({ type: "openmausbot:companion-e2e", transportKey: readE2EIdentity(document).privateKey, relay: null });
     e2e.resumed();
-    expect(posted.at(-1)).toEqual({ type: "megzbot:companion-e2e-redial" });
+    expect(posted.at(-1)).toEqual({ type: "openmausbot:companion-e2e-redial" });
     e2e.stop();
   });
 

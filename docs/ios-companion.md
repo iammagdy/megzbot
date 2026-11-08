@@ -297,7 +297,7 @@ Each submission uses RFC 9180 base-mode HPKE with P-256/HKDF-SHA256/AES-GCM-256
 and authenticates this exact newline-separated context:
 
 ```text
-megzbot-phone-credential-v1
+openmausbot-phone-credential-v1
 <key id>
 <authenticated companion device id>
 <bot id>

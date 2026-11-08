@@ -27,15 +27,15 @@ import {
 
 const service: ServiceInfo = {
   name: "Milind's computer",
-  type: "_megzbot._tcp",
+  type: "_openmausbot._tcp",
   port: 8800,
   host: "megzbot-1a2b3c4d.local",
   addresses: ["192.168.1.42"],
   txt: ["v=1", "name=Milind's computer"],
 };
 
-const INSTANCE = "Milind's computer._megzbot._tcp.local";
-const SERVICE_NAME = "_megzbot._tcp.local";
+const INSTANCE = "Milind's computer._openmausbot._tcp.local";
+const SERVICE_NAME = "_openmausbot._tcp.local";
 
 function query(name: string, type: number, opts: { id?: number; unicast?: boolean } = {}): Buffer {
   const header = Buffer.alloc(12);

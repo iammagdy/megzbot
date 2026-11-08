@@ -249,9 +249,9 @@ describe("resolveRequestAuth", () => {
   it("accepts authenticated relay mutations without exposing the desktop owner capability", () => {
     const headers = {
       host: "127.0.0.1:8799",
-      "x-megzbot-companion": "1",
-      "x-megzbot-companion-device": "phone-1",
-      "x-megzbot-companion-auth": "relay-secret",
+      "x-openmausbot-companion": "1",
+      "x-openmausbot-companion-device": "phone-1",
+      "x-openmausbot-companion-auth": "relay-secret",
     };
     const check = (method: string, path: string, overrides: Record<string, string> = {}, relay = "relay-secret") =>
       resolveRequestAuth(request({ ...headers, ...overrides }, method), {
@@ -266,7 +266,7 @@ describe("resolveRequestAuth", () => {
       ["GET", "/api/bots/b/browser/live"], ["POST", "/api/bots/b/browser/action"],
     ]) expect(check(method, path).auth?.kind, path).toBe("loopback");
     expect(check("GET", "/api/phones/self/jobs").auth).toEqual({ kind: "loopback", scopes: ["admin", "client"], companionDevice: "phone-1" });
-    const plain = resolveRequestAuth(request({ host: "127.0.0.1:8799", "x-megzbot-companion": "1", "x-megzbot-companion-device": "phone-1" }, "GET"), {
+    const plain = resolveRequestAuth(request({ host: "127.0.0.1:8799", "x-openmausbot-companion": "1", "x-openmausbot-companion-device": "phone-1" }, "GET"), {
       sessions, cookieName, streamPath: "/api/events", url: new URL("/api/phones/self/jobs", "http://localhost"),
       loopbackMutationToken: "desktop-secret", companionMutationToken: "relay-secret",
     });
@@ -276,10 +276,10 @@ describe("resolveRequestAuth", () => {
       ["POST", "/api/bots/b/browser/restart"],
     ]) expect(check(method, path).auth?.kind, path).not.toBe("loopback");
     const forged: Record<string, string>[] = [
-      { "x-megzbot-companion-auth": "" },
-      { "x-megzbot-companion-auth": "desktop-secret" },
-      { "x-megzbot-companion-device": "" },
-      { "x-megzbot-companion": "0" },
+      { "x-openmausbot-companion-auth": "" },
+      { "x-openmausbot-companion-auth": "desktop-secret" },
+      { "x-openmausbot-companion-device": "" },
+      { "x-openmausbot-companion": "0" },
       { origin: "https://evil.example" },
       { "x-forwarded-for": "203.0.113.1" },
       { host: "remote.example" },
@@ -802,7 +802,7 @@ describe("a browser on this machine is not the owner", () => {
     expect(check({ ...ownUi, "x-megzbot-desktop-owner": "" }, "/api/bots", "GET", { desktopToken: "" }).auth).toBeNull();
     // The app's main process and the companion send no Sec-Fetch-*.
     expect(check({ host: "127.0.0.1:8799" }, "/api/bots", "GET", desktop).auth?.kind).toBe("loopback");
-    const relay = { host: "127.0.0.1:8799", "x-megzbot-companion": "1", "x-megzbot-companion-device": "phone-1", "x-megzbot-companion-auth": "relay-secret" };
+    const relay = { host: "127.0.0.1:8799", "x-openmausbot-companion": "1", "x-openmausbot-companion-device": "phone-1", "x-openmausbot-companion-auth": "relay-secret" };
     expect(check(relay, "/api/bots/b/messages", "POST", desktop).auth?.kind).toBe("loopback");
   });
 

@@ -71,7 +71,7 @@ async function mintTestCapability(
 }
 
 const PHONE_SECRET_TEST_IDENTITY = {
-  type: "megzbot:phone-secret-key",
+  type: "openmausbot:phone-secret-key",
   version: 1,
   keyId: "taWSR_nZ7ojlH_0Z3tar6Q",
   privateKey: {
@@ -6349,8 +6349,8 @@ describe("harness HTTP API", () => {
           method: "POST",
           headers: {
             "content-type": "application/json",
-            "x-megzbot-companion": "1",
-            "x-megzbot-companion-device": "phone-1",
+            "x-openmausbot-companion": "1",
+            "x-openmausbot-companion-device": "phone-1",
           },
           body: JSON.stringify(encryptedEnvelope),
         },
@@ -6813,7 +6813,7 @@ describe("harness HTTP API", () => {
             queueMicrotask(() => callback({ data: identity }));
           },
           postMessage(message) {
-            if (message?.type !== "megzbot:phone-secret-save") return;
+            if (message?.type !== "openmausbot:phone-secret-save") return;
             writeFileSync(join(gate, message.requestId + ".started"), message.target);
             saves = saves.then(async () => {
               while (!existsSync(release)) await delay(10);
@@ -6833,13 +6833,13 @@ describe("harness HTTP API", () => {
                 const body = await response.json().catch(() => null);
                 if (!response.ok) throw new Error(body?.error || "credential config failed");
                 messages.emit("message", { data: {
-                  type: "megzbot:phone-secret-save-result",
+                  type: "openmausbot:phone-secret-save-result",
                   requestId: message.requestId,
                   ok: true,
                 } });
               } catch (error) {
                 messages.emit("message", { data: {
-                  type: "megzbot:phone-secret-save-result",
+                  type: "openmausbot:phone-secret-save-result",
                   requestId: message.requestId,
                   ok: false,
                   error: error instanceof Error ? error.message : String(error),
@@ -7007,8 +7007,8 @@ describe("harness HTTP API", () => {
           method: "POST",
           headers: {
             "content-type": "application/json",
-            "x-megzbot-companion": "1",
-            "x-megzbot-companion-device": deviceId,
+            "x-openmausbot-companion": "1",
+            "x-openmausbot-companion-device": deviceId,
           },
           body: JSON.stringify(Object.fromEntries(
             Object.entries(envelope).filter(([key]) => key !== "botId" && key !== "messageId"),
@@ -11019,8 +11019,8 @@ describe("harness HTTP API", () => {
           method: "POST",
           headers: {
             "content-type": "application/json",
-            "x-megzbot-companion": "1",
-            "x-megzbot-companion-device": "phone-1",
+            "x-openmausbot-companion": "1",
+            "x-openmausbot-companion-device": "phone-1",
           },
           body: JSON.stringify({
             version: 1,
