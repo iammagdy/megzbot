@@ -4,7 +4,7 @@ description: Understand the harness, webhook, and companion network boundaries.
 icon: Network
 ---
 
-OpenMausBot separates its network surfaces by trust level.
+MEGZbot separates its network surfaces by trust level.
 
 | Surface | Default bind | Purpose |
 |---|---|---|
@@ -15,13 +15,13 @@ OpenMausBot separates its network surfaces by trust level.
 
 ## Remote access
 
-Never forward the harness port yourself. A self-hosted server is reached through one of `openmausbot serve`'s ways in:
+Never forward the harness port yourself. A self-hosted server is reached through one of `megzbot serve`'s ways in:
 
 - `--public-url https://…`: your own cloudflared tunnel, Caddy or nginx in front;
 - `--domain HOST`: a managed Caddy that gets the certificate;
 - `--tailscale`: your tailnet, with Tailscale's HTTPS;
 - `--lan`: this network only, plain http. It listens on every address, but answers only connections whose two ends are both private;
-- `--tunnel`: a free MausBot web address.
+- `--tunnel`: a free MEGZbot web address.
 
 Each prints one pairing link; paste it into the desktop app under **＋ → Connect to a server**. The app accepts plain http only on private networks: LAN addresses, Tailscale's 100.64/10 and `*.ts.net`, and `*.local`.
 

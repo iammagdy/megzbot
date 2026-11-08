@@ -31,7 +31,7 @@ Sign in and pair:
 
 ```sh
 docker compose exec omb codex login --device-auth
-docker compose exec omb openmausbot pair
+docker compose exec omb megzbot pair
 ```
 
 With the defaults, `pair` prints a sign-in link for a browser on the Docker
@@ -40,10 +40,10 @@ there and name the address they use (only on a machine behind your router):
 
 ```sh
 OMB_BIND_ADDRESS=0.0.0.0 OMB_PUBLIC_URL=http://192.168.1.20:8080 docker compose up -d
-docker compose exec omb openmausbot pair    # Link http://192.168.1.20:8080/pair#code=…
+docker compose exec omb megzbot pair    # Link http://192.168.1.20:8080/pair#code=…
 ```
 
-Paste that link into MausBot under **＋ → Connect to a server**; the app
+Paste that link into MEGZbot under **＋ → Connect to a server**; the app
 accepts plain http on a private network address. The other install methods
 are in [Self-hosting](../../docs/self-hosting.md#golden-paths).
 

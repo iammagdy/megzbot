@@ -400,7 +400,7 @@ export async function probeOpenCodeSession(
     void (async () => {
       await request("initialize", {
         protocolVersion: 1,
-        clientInfo: { name: "openmausbot", version: "0.0.0" },
+        clientInfo: { name: "megzbot", version: "0.0.0" },
         clientCapabilities: { fs: { readTextFile: false, writeTextFile: false }, terminal: false },
       });
       const session = await request("session/new", { cwd, mcpServers: [] });

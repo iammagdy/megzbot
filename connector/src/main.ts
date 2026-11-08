@@ -1,4 +1,4 @@
-// mausbot-connector: `run` (the service), `enroll` (the code on stdin), `status`, `probe`, `job` (one job from root on this
+// megzbot-connector: `run` (the service), `enroll` (the code on stdin), `status`, `probe`, `job` (one job from root on this
 // server), `audit` (the audit log, checked), `version`.
 import { existsSync, readFileSync, statfsSync } from "node:fs";
 import { join } from "node:path";
@@ -101,7 +101,7 @@ async function run(): Promise<void> {
   const state = new StateStore(PATHS.state);
   const docker = new SocketDocker(PATHS.docker);
   const instance = process.env.MAUSBOT_INSTANCE || "unknown";
-  log(`MausBot connector ${CONNECTOR_VERSION} starting`);
+  log(`MEGZbot connector ${CONNECTOR_VERSION} starting`);
   const audit = auditLog();
   const note = (event: Parameters<AuditLog["append"]>[0]) => {
     try { audit.append(event); } catch (error) { log(`could not write the audit log ${audit.file}: ${errorText(error)}`); }
@@ -115,7 +115,7 @@ async function run(): Promise<void> {
     await sleep(10 * 60_000);
   }
   let record: AgentRecord | null = state.agent();
-  if (!record) log("waiting for this server to be connected: run the install command with the code MausBot shows");
+  if (!record) log("waiting for this server to be connected: run the install command with the code MEGZbot shows");
   const enrolledNow = !record;
   while (!record) {
     await sleep(2_000);
@@ -125,7 +125,7 @@ async function run(): Promise<void> {
   let current: AgentRecord = record;
   if (enrolledNow) note({ event: "connector", what: "enrolled", version: CONNECTOR_VERSION, image: identity().image, boxId: record.boxId });
   const kept = savedConfig(state.adminConfig(), current);
-  if (kept) log(`going by MausBot's schedule and policy kept on this server (version ${kept.version}) until MausBot answers`);
+  if (kept) log(`going by MEGZbot's schedule and policy kept on this server (version ${kept.version}) until MEGZbot answers`);
   const host = hostReporter(docker, () => current.admin);
   const home = new Home({
     docker, state, log, readHealth, seccomp, transfer: httpTransfer,
@@ -158,10 +158,10 @@ async function run(): Promise<void> {
     saveAdminKeys: (keys) => {
       current = { ...current, adminKeys: keys };
       state.saveAgent(current);
-      log(`MausBot's signing keys are now ${Object.keys(keys).join(", ")}`);
+      log(`MEGZbot's signing keys are now ${Object.keys(keys).join(", ")}`);
     },
     config: { saved: () => state.adminConfig(), save: (config) => state.saveAdminConfig(config) },
-    onConfig: (config) => log(`MausBot's schedule and policy (version ${config.version}) are kept on this server`),
+    onConfig: (config) => log(`MEGZbot's schedule and policy (version ${config.version}) are kept on this server`),
     stream: (stream, accept) => serveRequest(stream, accept, { connectHome, record: note }),
     refused: (refusal) => note({ event: "refused", by: "admin", code: refusal.code, why: refusal.message, ...(refusal.id ? { id: refusal.id } : {}), ...(refusal.type ? { type: refusal.type } : {}) }),
   });
@@ -235,7 +235,7 @@ async function enrollCommand(): Promise<void> {
   state.saveAgent(record);
   // Connected again only once the service has connected with this token.
   state.saveStatus({ connected: false, unauthorized: false, lastError: null });
-  console.log(`This server is connected to MausBot (server ${record.boxId}).`);
+  console.log(`This server is connected to MEGZbot (server ${record.boxId}).`);
 }
 
 function statusCommand(): void {
@@ -253,7 +253,7 @@ function statusCommand(): void {
 
 /**
  * One line per check for install.sh: `ok <id>`, `warn <id> <fix>` or `fail <id> <fix>`. With --json, one object
- * `{ok, checks}` for `openmausbot doctor --host`, which asks the connector on a server that runs one. Exits 1 when any
+ * `{ok, checks}` for `megzbot doctor --host`, which asks the connector on a server that runs one. Exits 1 when any
  * check fails.
  */
 async function probeCommand(): Promise<void> {
@@ -277,7 +277,7 @@ async function probeCommand(): Promise<void> {
 /** `job <type> [args as JSON]`: one job, run by the running connector; prints its reply, exits 1 when it failed. */
 async function jobCommand(): Promise<void> {
   const [type, args] = process.argv.slice(3);
-  if (!type) throw new Error("usage: mausbot-connector job <type> [args as JSON], e.g. job update '{\"image\":\"ghcr.io/…@sha256:…\"}'");
+  if (!type) throw new Error("usage: megzbot-connector job <type> [args as JSON], e.g. job update '{\"image\":\"ghcr.io/…@sha256:…\"}'");
   let parsed: unknown = {};
   if (args) {
     try { parsed = JSON.parse(args); } catch { throw new Error("the job's arguments are not JSON"); }
@@ -314,7 +314,7 @@ const commands: Record<string, () => Promise<void> | void> = {
 
 const command = commands[process.argv[2] ?? "run"];
 if (!command) {
-  console.error("usage: mausbot-connector run | enroll | status | probe [--json] | job <type> [args] | audit [--tail N | --verify] | version");
+  console.error("usage: megzbot-connector run | enroll | status | probe [--json] | job <type> [args] | audit [--tail N | --verify] | version");
   process.exitCode = 2;
 } else {
   Promise.resolve().then(command).catch((error) => {

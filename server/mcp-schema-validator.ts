@@ -48,7 +48,7 @@ export function compileServerToolSchema(schema: Record<string, unknown>): Valida
   throw refusal;
 }
 
-/** How much of a server tool's schema OpenMausBot checks a call against before the server checks it: all of it, the
+/** How much of a server tool's schema MEGZbot checks a call against before the server checks it: all of it, the
  * lenient copy, or only that the arguments are an object. */
 export type ServerToolCheck = "full" | "lenient" | "object";
 

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import { availableTools, catalogProfileFromEnv, fullInputSchema } from "./agents-catalog.ts";
-import { MAUSBOT_TOOL_DEFINITIONS } from "./agents-mausbot-tools.ts";
+import { MAUSBOT_TOOL_DEFINITIONS } from "./agents-megzbot-tools.ts";
 
 const listed = (env: Record<string, string>) => availableTools(catalogProfileFromEnv({ OMB_BOT_ID: "maus", OMB_CHIEF_OF_STAFF: "1", ...env }));
 
-describe("MausBot's two notification tools on the wire", () => {
+describe("MEGZbot's two notification tools on the wire", () => {
   const maus = listed({ OMB_MAUSBOT: "1" }).slice(-2) as Array<{ name: string; inputSchema: Record<string, any> }>;
 
   it("are listed last, in this order, only with OMB_MAUSBOT", () => {

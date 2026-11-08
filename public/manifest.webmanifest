@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "OpenMausBot",
-  "short_name": "OpenMausBot",
+  "name": "MEGZbot",
+  "short_name": "MEGZbot",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

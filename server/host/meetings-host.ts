@@ -118,7 +118,7 @@ export function createMeetingsHost(deps: MeetingsHostDeps, routeDeps: () => Meet
     computerOwner(botId) {
       const bot = store.bot(botId);
       if (!bot) return { error: "The bot is gone." };
-      if (!boat.boatConfigured(cfg)) return { error: "Meeting notes run on a cloud computer, and none is set up here. Add a Boat key in Settings → Computers, or use MausBot Cloud." };
+      if (!boat.boatConfigured(cfg)) return { error: "Meeting notes run on a cloud computer, and none is set up here. Add a Boat key in Settings → Computers, or use MEGZbot Cloud." };
       return deps.computerOwner(bot);
     },
     createRoutine(botId, threadId) {

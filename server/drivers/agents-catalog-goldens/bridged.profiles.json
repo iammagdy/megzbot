@@ -519,7 +519,7 @@
       "use_tool"
     ]
   },
-  "default+mausbot": {
+  "default+megzbot": {
     "bytes": 17632,
     "sha256": "d46d767bcef1b06d73587d42a91bd35f907087c1c9e02c7243299792504efaa3",
     "tools": [
@@ -541,7 +541,7 @@
       "use_tool"
     ]
   },
-  "skills+shared+voice+mausbot": {
+  "skills+shared+voice+megzbot": {
     "bytes": 18480,
     "sha256": "9e0af7007c3318709df9f8e57987ef205b9667019cafec6502f005e334d7e9fa",
     "tools": [

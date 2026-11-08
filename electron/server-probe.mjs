@@ -2,7 +2,7 @@
 // failure is sorted into one thing the person can fix.
 import { EXAMPLE_ADDRESS, isLoopbackHost, parseServerInput, serverTransport } from "./server-address.mjs";
 
-const DESCRIPTOR = "/.well-known/openmausbot/environment";
+const DESCRIPTOR = "/.well-known/megzbot/environment";
 
 /** The sentence for each problem, in the window's catalog and main's alike ({host}, {example} filled in). */
 export const CONNECT_PROBLEM_KEYS = Object.freeze({
@@ -18,7 +18,7 @@ export const CONNECT_PROBLEM_KEYS = Object.freeze({
   unreachable: "native.connect.unreachable",
   dns: "native.connect.dns",
   certificate: "native.connect.certificate",
-  notMausBot: "native.connect.notMausBot",
+  notMEGZbot: "native.connect.notMEGZbot",
   loopback: "native.connect.loopback",
 });
 
@@ -40,7 +40,7 @@ async function describe(origin, fetchImpl, timeoutMs) {
     return { ok: false, kind: failureKind(error) };
   }
   const body = response.ok ? await response.json().catch(() => null) : null;
-  if (typeof body?.environmentId !== "string" || !body.environmentId) return { ok: false, kind: "notMausBot" };
+  if (typeof body?.environmentId !== "string" || !body.environmentId) return { ok: false, kind: "notMEGZbot" };
   return { ok: true, environmentId: body.environmentId, label: typeof body.label === "string" && body.label.trim() ? body.label.trim().slice(0, 60) : new URL(origin).host,
     version: typeof body.version === "string" ? body.version.slice(0, 32) : null };
 }
@@ -48,7 +48,7 @@ async function describe(origin, fetchImpl, timeoutMs) {
 /**
  * Reads the sheet's fields and finds the server: `{ outcome: "found", origin, label, version, transport, code, credential }`,
  * or `{ outcome: "problem", problem, host?, code? }` with one of parseServerInput's problems or: unreachable, dns,
- * certificate, notMausBot, loopback (an address on this computer that is this app's own workspace, or nothing at all).
+ * certificate, notMEGZbot, loopback (an address on this computer that is this app's own workspace, or nothing at all).
  * `ownEnvironmentId()`: this app's own local workspace, so a "this computer" link copied off a server is caught.
  */
 export async function probeServer({ address, code = "", fetch: fetchImpl, ownEnvironmentId = async () => null, timeoutMs = 6_000 }) {

@@ -10,7 +10,7 @@ reruns and recovery. It
 builds macOS (arm64 + x64, signed, notarized, stapled), Windows, and Ubuntu
 from a single pinned commit, verifies every artifact the way a user would
 receive it, and assembles the canonical draft in
-[OpenMausBot releases](https://github.com/milind-soni/OpenMausBot/releases).
+[MEGZbot releases](https://github.com/iammagdy/megzbot/releases).
 The exact same assets are also staged in the public legacy releases repo so
 installed builds from 0.1.46 and earlier can update across the repository
 migration.
@@ -50,12 +50,12 @@ refreshes it.
 ## Updater migration invariant
 
 `app-update.yml` is baked into every packaged desktop app. Builds through
-0.1.46 point to `milind-soni/openmausbot-releases`; newer builds point to
-`milind-soni/OpenMausBot`. For that reason:
+0.1.46 point to `iammagdy/megzbot-releases`; newer builds point to
+`iammagdy/megzbot`. For that reason:
 
 1. Every new release is published byte-for-byte to both repositories during
    the bridge period.
-2. `openmausbot-releases` must stay public. Do not delete its final bridge
+2. `megzbot-releases` must stay public. Do not delete its final bridge
    release, feeds, or assets.
 3. README and docs downloads point at the canonical repo, while the legacy
    mirror exists only for installed updater clients and historical releases.
@@ -86,7 +86,7 @@ must fail the build, not ship an installer that downloads them on first use.
 
 ## One-time setup: release secrets
 
-Set these in **OpenMausBot → Settings → Secrets and variables → Actions**.
+Set these in **MEGZbot → Settings → Secrets and variables → Actions**.
 
 The **Prepare next release** workflow also needs
 **Settings → Actions → General → Workflow permissions → Allow GitHub Actions
@@ -99,7 +99,7 @@ The Developer ID Application certificate, exported from the Mac that
 currently signs releases:
 
 ```sh
-# Keychain Access → My Certificates → "Developer ID Application: Milind Soni
+# Keychain Access → My Certificates → "Developer ID Application: Magdy
 # (993D98NH4J)" → right-click → Export… → .p12 with a strong password, then:
 base64 -i DeveloperID.p12 | pbcopy   # → MAC_CERT_P12_BASE64
 # the export password             → MAC_CERT_PASSWORD
@@ -122,7 +122,7 @@ base64 -i AuthKey_XXXXXXXX.p8 | pbcopy   # → APPLE_API_KEY_P8_BASE64
 
 A fine-grained personal access token that lets the workflow write to the
 legacy updater mirror: **GitHub → Settings → Developer settings →
-Fine-grained tokens** → repository access: only `openmausbot-releases` →
+Fine-grained tokens** → repository access: only `megzbot-releases` →
 permissions: **Contents: Read and write**. Set a long expiry and a calendar
 reminder. The canonical release uses the workflow's scoped `GITHUB_TOKEN` and
 does not need a PAT.

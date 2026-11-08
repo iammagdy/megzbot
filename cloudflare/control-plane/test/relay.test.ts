@@ -8,7 +8,7 @@ import { readConfig } from "../src/config";
 import { createWorker } from "../src/index";
 import { forgetRelayAdoption, importSigningSeed, mintRelayToken, orderNodes, RELAY_TOKEN_LIMIT, rolloutBucket } from "../src/relay";
 
-const BASE_URL = "https://auth.openmausbot.test";
+const BASE_URL = "https://auth.megzbot.test";
 const hex = (text: string) => Uint8Array.from(text.match(/../g)!.map((pair) => Number.parseInt(pair, 16)));
 const b64u = (bytes: Uint8Array) => btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const fromB64u = (text: string) => Uint8Array.from(atob(text.replace(/-/g, "+").replace(/_/g, "/") + "=".repeat((4 - (text.length % 4)) % 4)), (c) => c.charCodeAt(0));
@@ -266,7 +266,7 @@ describe("a Worker deployed before migration 0012", () => {
     const health = await call(oldEnv, "/healthz", { method: "GET" });
     expect(health.status).toBe(200);
     const body = await health.json<Record<string, unknown>>();
-    expect(body).toMatchObject({ ok: true, service: "openmausbot-control-plane" });
+    expect(body).toMatchObject({ ok: true, service: "megzbot-control-plane" });
     expect(body).not.toHaveProperty("relayAdoption");
 
     const token = await ask(oldEnv, credential);

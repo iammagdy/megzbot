@@ -79,7 +79,7 @@ function answer(req: IncomingMessage, res: ServerResponse, raw: string) {
       return res.end(body.entry);
     }
     if (body.path === "shots/" && body.listFolder) {
-      return send(200, { name: "shots", entries: [{ name: "a.png", bytes: 5 }, { name: "b.png", bytes: 5 }], truncated: false }, { "x-openmausbot-folder": "1" });
+      return send(200, { name: "shots", entries: [{ name: "a.png", bytes: 5 }, { name: "b.png", bytes: 5 }], truncated: false }, { "x-megzbot-folder": "1" });
     }
     return send(403, { error: "that bot message does not link to this file" });
   }

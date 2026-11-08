@@ -65,7 +65,7 @@ function profiles(): Record<string, Record<string, string>> {
   all["skills+shared+voice+escalations+x+team"] = { ...all["skills+shared+voice+escalations+x"]!, OMB_TEAM_PEOPLE: "1" };
   all["skills+shared+voice+escalations+x+team+images"] = { ...all["skills+shared+voice+escalations+x+team"]!, OMB_IMAGE_GENERATION: "1" };
   all["default+legacy-switches"] = { ...all.default!, OMB_ROOM_TURN: "1", OMB_OWN_THREAD_CREATION: "1", OMB_EXTERNAL_RUNTIME: "1", OMB_ACTIVE_WAITS: "0" };
-  for (const name of ["default", "skills+shared+voice"]) all[`${name}+mausbot`] = { ...all[name]!, OMB_MAUSBOT: "1" };
+  for (const name of ["default", "skills+shared+voice"]) all[`${name}+megzbot`] = { ...all[name]!, OMB_MAUSBOT: "1" };
   all["default+no-computer-pick"] = { ...all.default!, OMB_COMPUTER_SELECTION: "0" };
   for (const name of ["default", "non-chief"]) all[`${name}+room`] = { ...all[name]!, OMB_COMPUTER_SELECTION: "0", OMB_ROOM: "1" };
   all["default+images"] = { ...all.default!, OMB_IMAGE_GENERATION: "1" };
@@ -105,8 +105,8 @@ const BUDGET_BASELINE: Record<string, number> = {
   "skills+shared+voice+escalations+x": 18507,
   "skills+shared+voice+escalations+x+team": 18507,
   "default+legacy-switches": 17486,
-  "default+mausbot": 17538,
-  "skills+shared+voice+mausbot": 18480,
+  "default+megzbot": 17538,
+  "skills+shared+voice+megzbot": 18480,
   "default+no-computer-pick": 16274,
   "default+room": 16213,
   "non-chief+room": 16096,
@@ -119,7 +119,7 @@ type RpcAnswer = { id: number; result?: { tools?: unknown[]; content?: Array<{ t
 /** One freshly spawned proxy's raw answer lines to `requests`, in the order
  * asked, read off its stdout as they arrive. */
 async function proxyLines(entry: string, env: Record<string, string>, requests: Array<{ method: string; params?: unknown }>): Promise<string[]> {
-  // A developer shell (or an OpenMausBot turn running this suite) can carry
+  // A developer shell (or an MEGZbot turn running this suite) can carry
   // OMB_* switches of its own; the profile must be the only source.
   const inherited = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("OMB_")));
   const child = spawn(process.execPath, [entry], {

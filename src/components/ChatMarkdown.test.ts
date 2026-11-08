@@ -565,23 +565,23 @@ describe("#Title thread links in markdown", () => {
   });
 
   it("renders a sent canonical link as a chip that opens the thread", () => {
-    const markup = render("done in [QA PR 245](openmausbot://thread/qa-245?bot=scout) today");
+    const markup = render("done in [QA PR 245](megzbot://thread/qa-245?bot=scout) today");
     expect(markup).toContain('<button type="button" data-thread-link="qa-245"');
     expect(markup).toContain(">QA PR 245</button>");
-    expect(markup).not.toContain('href="openmausbot://');
+    expect(markup).not.toContain('href="megzbot://');
   });
 
   it("keeps a dead thread link as plain text, never an external anchor", () => {
-    const markup = render("see [Gone](openmausbot://thread/dead?bot=scout)");
+    const markup = render("see [Gone](megzbot://thread/dead?bot=scout)");
     expect(markup).toContain(">Gone<");
     expect(markup).not.toContain("data-thread-link");
-    expect(markup).not.toContain('href="openmausbot://');
+    expect(markup).not.toContain('href="megzbot://');
     expect(markup).not.toContain('target="_blank"');
   });
 });
 
 describe("a Use my Mac link in an older bot message", () => {
-  const text = "To let me use your apps, press [Use my Mac](openmausbot://use-my-computer).";
+  const text = "To let me use your apps, press [Use my Mac](megzbot://use-my-computer).";
 
   it("is plain text everywhere, even in this app with an older Cloud's bridge: this computer is lent by itself", () => {
     const offer = vi.fn(async () => {});
@@ -590,12 +590,12 @@ describe("a Use my Mac link in an older bot message", () => {
       const markup = renderToStaticMarkup(createElement(ChatMarkdown, { text }));
       expect(markup).toContain(">Use my Mac<");
       expect(markup).not.toContain("<button");
-      expect(markup).not.toContain('href="openmausbot://');
+      expect(markup).not.toContain('href="megzbot://');
       expect(offer).not.toHaveBeenCalled();
     } finally {
       delete window.ogb;
     }
-    expect(chatUrlTransform("openmausbot://use-my-computer")).toBe("openmausbot://use-my-computer");
+    expect(chatUrlTransform("megzbot://use-my-computer")).toBe("megzbot://use-my-computer");
   });
 });
 
@@ -650,7 +650,7 @@ describe("application and rejected Markdown links", () => {
 });
 
 describe("a bot's link to a page it published", () => {
-  const PAGE = "https://abcdefghijklmnopqrstuvwxyz.mausbot.page/";
+  const PAGE = "https://abcdefghijklmnopqrstuvwxyz.megzbot.page/";
   const text = `Here is your dashboard: [Sales dashboard](${PAGE})`;
   async function clickPage(store?: Parameters<typeof BotEditorStore>[0]["value"]) {
     const host = document.createElement("div");
@@ -807,14 +807,14 @@ describe("ChatMarkdown attachments", () => {
     const preview = vi.spyOn(AttachmentPreview, "MarkdownImagePreview");
     try {
       const html = renderToStaticMarkup(createElement(ChatMarkdown, {
-        text: "[Report](C:\\Users\\Maus\\.openmausbot\\report.md)\n\n![Chart](C:\\Users\\Maus\\.openmausbot\\chart.png)",
+        text: "[Report](C:\\Users\\Maus\\.megzbot\\report.md)\n\n![Chart](C:\\Users\\Maus\\.megzbot\\chart.png)",
         message: { threadId: "thread-1", messageId: "message-1" },
       }));
       expect(html).toContain('title="Save a copy"');
       expect(html).not.toContain('href=""');
       expect(html).not.toContain("Image unavailable");
-      expect(save.mock.calls[0]?.[0]).toBe("C:\\Users\\Maus\\.openmausbot\\report.md");
-      expect(preview.mock.calls[0]?.[0].filePath).toBe("C:\\Users\\Maus\\.openmausbot\\chart.png");
+      expect(save.mock.calls[0]?.[0]).toBe("C:\\Users\\Maus\\.megzbot\\report.md");
+      expect(preview.mock.calls[0]?.[0].filePath).toBe("C:\\Users\\Maus\\.megzbot\\chart.png");
     } finally {
       save.mockRestore();
       preview.mockRestore();

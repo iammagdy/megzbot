@@ -5,21 +5,21 @@ export const CONNECTOR_VERSION = "1.0.0";
 
 /** Docker objects the connector owns. */
 export const NAMES = {
-  connector: "mausbot-connector",
-  connectorNext: "mausbot-connector-next",
-  home: "mausbot-home",
-  dataVolume: "mausbot-data",
-  stateVolume: "mausbot-connector",
-  snapshotVolume: "mausbot-snapshot",
-  backupPrefix: "mausbot-backup-",
+  connector: "megzbot-connector",
+  connectorNext: "megzbot-connector-next",
+  home: "megzbot-home",
+  dataVolume: "megzbot-data",
+  stateVolume: "megzbot-connector",
+  snapshotVolume: "megzbot-snapshot",
+  backupPrefix: "megzbot-backup-",
 } as const;
 
 export const LABELS = {
-  role: "com.mausbot.role",
-  instance: "com.mausbot.instance",
-  created: "com.mausbot.created",
-  image: "com.mausbot.image",
-  env: "com.mausbot.env",
+  role: "com.megzbot.role",
+  instance: "com.megzbot.instance",
+  created: "com.megzbot.created",
+  image: "com.megzbot.image",
+  env: "com.megzbot.env",
 } as const;
 
 /** Backups the connector keeps; a newer one replaces the oldest. */
@@ -29,14 +29,14 @@ export const BACKUPS_KEPT = 3;
 export const PATHS = {
   state: process.env.MAUSBOT_STATE_DIR || "/state",
   docker: process.env.MAUSBOT_DOCKER_SOCKET || "/var/run/docker.sock",
-  /** /etc/mausbot on the host, mounted read-only: the seccomp profile install.sh put there. */
-  hostConfig: process.env.MAUSBOT_HOST_CONFIG_DIR || "/etc/mausbot",
+  /** /etc/megzbot on the host, mounted read-only: the seccomp profile install.sh put there. */
+  hostConfig: process.env.MAUSBOT_HOST_CONFIG_DIR || "/etc/megzbot",
   /** The connector's own copies, which install.sh installs from this image. */
   profiles: process.env.MAUSBOT_PROFILES_DIR || "/app/profiles",
-  /** /var/log/mausbot on the host, mounted read-write: the audit log the server's owner reads. */
-  audit: process.env.MAUSBOT_AUDIT_DIR || "/var/log/mausbot",
-  /** In the container's own /tmp: `mausbot-connector job` reaches the running connector here. */
-  jobs: process.env.MAUSBOT_JOBS_SOCKET || "/tmp/mausbot-jobs.sock",
+  /** /var/log/megzbot on the host, mounted read-write: the audit log the server's owner reads. */
+  audit: process.env.MAUSBOT_AUDIT_DIR || "/var/log/megzbot",
+  /** In the container's own /tmp: `megzbot-connector job` reaches the running connector here. */
+  jobs: process.env.MAUSBOT_JOBS_SOCKET || "/tmp/megzbot-jobs.sock",
 } as const;
 
 export const AUDIT_FILE = "audit.jsonl";
@@ -79,7 +79,7 @@ export const HOME_SECRET_ENV = [
   "OMB_CLOUD_CONNECTED_APPS_GRANT", "OMB_CLOUD_X_TOKEN", "OMB_CLOUD_TUNNEL_TOKEN",
 ] as const;
 /** In the home: a read-only folder holding only `secrets.json`, root's alone. The launcher reads it at start. */
-export const HOME_SECRETS_TARGET = "/run/mausbot";
+export const HOME_SECRETS_TARGET = "/run/megzbot";
 /** In the connector's state volume: the folder mounted at HOME_SECRETS_TARGET. */
 export const HOME_SECRETS_DIR = "home-secrets";
 export const HOME_SECRETS_FILE = "secrets.json";

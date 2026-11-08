@@ -1196,7 +1196,7 @@
       "mcp_server"
     ]
   },
-  "default+mausbot": {
+  "default+megzbot": {
     "bytes": 60330,
     "sha256": "93abed68ae9253abbd770711e903302789ffea7eeaf2225b6b772ee1aecacda0",
     "tools": [
@@ -1249,7 +1249,7 @@
       "mark_notifications_read"
     ]
   },
-  "skills+shared+voice+mausbot": {
+  "skills+shared+voice+megzbot": {
     "bytes": 66303,
     "sha256": "10bce05fa79678a01f33a773dca49a52d71630d3e44058dbdd34f3b338ac99d9",
     "tools": [
