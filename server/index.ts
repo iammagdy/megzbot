@@ -6450,7 +6450,7 @@ bus.subscribe((event: RuntimeEvent) => {
           const saved = saveImage(decoded.bytes, decoded.mime);
           const key = turnAttachmentKey(event.threadId, event.turnId);
           const current = turnAttachmentsByTurn.get(key) ?? [];
-          current.push({ kind: "image", path: saved.path, mime: saved.mime });
+          current.push({ kind: "image", path: saved.path, mime: saved.mime, ...(event.fromTool ? { fromTool: true as const } : {}) });
           turnAttachmentsByTurn.set(key, current);
         } catch (error) {
           pushMessage({
@@ -13286,11 +13286,13 @@ const handleRequest = async (req: IncomingMessage, res: ServerResponse) => {
             stillLive: () => internalCapabilityIsActive({ ...internalCapability, ...(vm ? { localVmTarget: vm } : {}) }) &&
               connectorThread(from.id, threadId) !== null,
             publish: (saved) => {
+              const turnId = liveTurnByThread.get(threadId);
               store.appendMessage(threadId, {
                 role: "bot",
                 kind: "text",
                 text: "",
                 attachments: [saved.attachment],
+                ...(turnId ? { sentInTurn: turnId } : {}),
                 ...(source.group ? { from: { botId: from.id, name: from.name, color: from.color } } : {}),
               });
             },
